@@ -1,0 +1,5 @@
+name: Hello-World
+description: Example hello world running JavaScript Github Action
+runs:
+  using: node12 # Runtime Environment
+  main: index.js # Script to run, path is relative
