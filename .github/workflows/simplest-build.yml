@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - github-action
   # We could instead trigger the workflow every 2 hours
   # schedule:
   #   - cron: "0 */2 * * *"
@@ -20,17 +21,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '13.x'
-      - run: npm install
-
-      # This step uses GitHub's hello-world-javascript-action: https://github.com/actions/hello-world-javascript-action
-      - name: Hello world
-        uses: actions/hello-world-javascript-action@v1
-        with:
-          who-to-greet: 'Mona the Octocat'
-        id: hello
-      # This step prints an output (time) from the previous step's action.
-      - name: Echo the greeting's time
-        run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+      - run: npm run log
 # name: Build and Deploy to Gatsby every two hours
 # ...
 # jobs:
