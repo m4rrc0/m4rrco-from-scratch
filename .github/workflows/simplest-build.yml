@@ -1,69 +1,56 @@
-name: Hello # Name of our workflow
-
-on: [push] # Repository event that will trigger the workflow
-
+name: Simplest build
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches:
+      - master
+  # We could instead trigger the workflow every 2 hours
+  # schedule:
+  #   - cron: "0 */2 * * *"
 jobs:
   build:
-    runs-on: ubuntu-latest # Environment job will run in
+    # Job name is Build
+    name: Build
+    # This job runs on Linux
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the current repository code as specified at https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#using-the-checkout-action
+      - uses: actions/checkout@v2
+      # 3. https://github.com/actions/setup-node#usage
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - run: npm install
 
-    steps: # Each action/command to run
-      - uses: actions/checkout@v2 # Helps check out the repo code
-      - uses: ./.github/actions/hello # Tell it to run our JS Action
-
-# name: Simplest build
-# # This workflow is triggered on pushes to the repository.
-# on:
-#   push:
-#     branches:
-#       - master
-#   # We could instead trigger the workflow every 2 hours
-#   # schedule:
-#   #   - cron: "0 */2 * * *"
+      # This step uses GitHub's hello-world-javascript-action: https://github.com/actions/hello-world-javascript-action
+      - name: Hello world
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: 'Mona the Octocat'
+        id: hello
+      # This step prints an output (time) from the previous step's action.
+      - name: Echo the greeting's time
+        run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+# name: Build and Deploy to Gatsby every two hours
+# ...
 # jobs:
 #   build:
-#     # Job name is Build
-#     name: Build
-#     # This job runs on Linux
-#     runs-on: ubuntu-latest
 #     steps:
-#       # Check out the current repository code as specified at https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#using-the-checkout-action
-#       - uses: actions/checkout@v2
+#       # Check out the current repository code
+#       - uses: actions/checkout@v1
 #       # 3. https://github.com/actions/setup-node#usage
 #       - uses: actions/setup-node@v1
 #         with:
-#           node-version: "13.x"
+#           node-version: "12.x"
 #       - run: npm install
-
-#       # This step uses GitHub's hello-world-javascript-action: https://github.com/actions/hello-world-javascript-action
-#       - name: Hello world
-#         uses: actions/hello-world-javascript-action@v1
+#       # This triggers `gatsby build` script in "package.json"
+#       - run: npm run build
+#       # 4. Deploy the gatsby build to Netlify
+#       - uses: netlify/actions/cli@master
+#         env:
+#           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 #         with:
-#           who-to-greet: 'Mona the Octocat'
-#         id: hello
-#       # This step prints an output (time) from the previous step's action.
-#       - name: Echo the greeting's time
-#         run: echo 'The time was ${{ steps.hello.outputs.time }}.'
-
-# # name: Build and Deploy to Gatsby every two hours
-# # ...
-# # jobs:
-# #   build:
-# #     steps:
-# #       # Check out the current repository code
-# #       - uses: actions/checkout@v1
-# #       # 3. https://github.com/actions/setup-node#usage
-# #       - uses: actions/setup-node@v1
-# #         with:
-# #           node-version: "12.x"
-# #       - run: npm install
-# #       # This triggers `gatsby build` script in "package.json"
-# #       - run: npm run build
-# #       # 4. Deploy the gatsby build to Netlify
-# #       - uses: netlify/actions/cli@master
-# #         env:
-# #           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-# #           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-# #         with:
-# #           # 5. "gatsby build" creates "public" folder, which is what we are deploying
-# #           args: deploy --dir=public --prod
-# #           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
+#           # 5. "gatsby build" creates "public" folder, which is what we are deploying
+#           args: deploy --dir=public --prod
+#           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
