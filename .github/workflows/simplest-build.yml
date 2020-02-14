@@ -1,13 +1,14 @@
 name: Simplest build
 # This workflow is triggered on pushes to the repository.
-on:
-  push:
-    branches:
-      - master
-      - github-action
-  # We could instead trigger the workflow every 2 hours
-  # schedule:
-  #   - cron: "0 */2 * * *"
+on: [push] # Repository event that will trigger the workflow
+# on:
+#   push:
+#     branches:
+#       - master
+#       - github-action
+# We could instead trigger the workflow every 2 hours
+# schedule:
+#   - cron: "0 */2 * * *"
 jobs:
   build:
     # Job name is Build
