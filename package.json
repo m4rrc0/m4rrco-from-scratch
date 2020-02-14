@@ -1,0 +1,15 @@
+{
+  "name": "m4rrco-from-scratch",
+  "version": "0.0.1",
+  "description": "my personal website from 1 html page to a jamstack site builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "personal site",
+    "jamstack"
+  ],
+  "author": "Marc Coët <hello@m4rr.co>",
+  "license": "MIT"
+}
