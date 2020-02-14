@@ -1,3 +1,15 @@
+name: Hello # Name of our workflow
+
+on: [push] # Repository event that will trigger the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Environment job will run in
+
+    steps: # Each action/command to run
+      - uses: actions/checkout@v2 # Helps check out the repo code
+      - uses: ./.github/actions/hello # Tell it to run our JS Action
+
 # name: Simplest build
 # # This workflow is triggered on pushes to the repository.
 # on:
