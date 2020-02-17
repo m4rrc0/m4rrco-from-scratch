@@ -44,6 +44,8 @@ My guiding principles for this 'website builder' project:
 - doing it for myself and for bringing something valuable to the world
 - host your own or mutualize to make it easy and cheap
 - write about it while I build
+- content has to be separated from the code base
+- themes should be separated as well
 - ... (more will come as I build)
 
 The moving parts, things to explore and build upon (in no particular order):
@@ -54,7 +56,7 @@ The moving parts, things to explore and build upon (in no particular order):
 - on-page wysiwyg editing 2.0
 - zero emission website
 - personal hub on the web
-- ressource mutualization and data ownership
+- resource mutualization and data ownership
 - indie web
 - semantic web
 - ...
@@ -70,7 +72,8 @@ Current roadmap:
 - [ ] smallest setup to be productive
   - ? Eleventy ?
   - ? custom svelte compile to html ?
-- [ ] research how I could wysiwyg on-page edit. Can I code a POC in 1 day?
+- [ ] research how I could have wysiwyg on-page edit. Can I code a POC in 1 day?
+- [ ] should I use files or
 - [ ] ...
 
 ## Cool!!!
