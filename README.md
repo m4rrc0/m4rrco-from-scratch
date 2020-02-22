@@ -35,12 +35,11 @@ My plan is to re-start from scratch and [learn in public](https://www.swyx.io/wr
 My guiding principles for this 'website builder' project:
 
 - non-tech users should be at ease creating their website (at some point)
-- power users should be able to produce the same (or higher) quality website as they would when coding them from scratch
+- power users should be able to produce equivalent or higher quality websites as they would when coding them from scratch
 - smart ejectable defaults for every part of the project from design to backend choices
 - opinionated decisions with as much modularity as possible. I want to be able to replace some part of the code or some tech decision with something else easily
 - being as low tech as convenient
 - using as much open tech as convenient
-- using available tech to test ideas before developing something custom
 - doing it for myself and for bringing something valuable to the world
 - host your own or mutualize to make it easy and cheap
 - write about it while I build
