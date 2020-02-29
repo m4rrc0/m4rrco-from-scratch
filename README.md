@@ -20,13 +20,29 @@ Note: More sources are welcome!
 
 Anyone will be able to reclaim their identity on the web and create their own social circle with no strings attached (except with love ones of course ;) ).
 
-## Yeah yeah... and I will be eating swedish sushis on the moon with the president of the US tomorrow
+## Yeah yeah... and I will be eating swedish sushis on the moon with the president tomorrow
 
 Don't believe me? I am actually half way there!
 
 3 years ago (I was approx. 2 years into programming) I built [toile.io](https://www.toile.io/) as a way for my clients to edit their own [jamstack](https://jamstack.org/) websites and for me to automate website creation a little bit. Now, the project is [free and open source](https://github.com/toile-webstack/gatsby-site-builder).
 
 It is a prototype and it leaves a lot of space for improvement. The thing is that, even though this particular project has not evolved as much as I would have liked it to, I have been obsessed with this idea for 3 years! And I have got a lot of ideas and code snippets lying around waiting to find their rightful place in this project.
+
+## A broader picture
+
+What is the web (and cloud) to you? A way to:
+
+- communicate?
+- backup your data?
+- follow your friends' news and whereabouts?
+- get things done through web apps?
+- express yourself through creative content or art?
+- playing games?
+- ...
+
+Hopefully all of that. The web is a marvelous tool and we are only scratching the surface of what it can allow us to do.
+
+Now think of the tools you are using for all these experiences. How much are you depending on there good will to keep your data safe? What happens if the company providing the service goes bankrupt or get hacked? What happens if the company management changes or shareholders decide that profitability could be improved by leveraging users' data?
 
 ## Hhmm... so what are you gonna build?
 

@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Svelte static</title>
+        <style></style>
+    </head>
+
+    <body>
+        <div id="app">
+
+<div>HEY</div>
+
+<button>changes with JS</button></div>
+
+        <script type="module">
+            import Comp from './index.js';
+
+            new Comp({
+                target: document.querySelector('#app'),
+                hydrate: true
+            });
+        </script>
+    </body>
+</html>

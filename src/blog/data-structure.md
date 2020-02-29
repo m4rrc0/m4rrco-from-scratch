@@ -79,7 +79,7 @@ As creative content is free-form, we generally need to put it in a kind of sandb
 
 **The alternative is giving design powers to content creators!**
 
-Interestingly, this idea has precedence. That is the old fight of CMS Vs website builder.
+Interestingly, this idea has precedence. That is the old 'fight' of CMS Vs website builder.
 
 The former gives you a clean design with few surprises while the later gives you more freedom (and choices to make and ways to screw up the design).
 
@@ -140,3 +140,24 @@ I should dive in my vision for components in another post. Let's just suggest a 
 Let's start with a simple blog. Each blog post has structured data and free-form content. Let's keep it simple: free-form content goes in the main body of the post dedicated page
 
 I know that my event has structured data and free-form content
+
+---
+
+## CMSes
+
+Headless CMSes are great! They are great for simple structured content and to allow edition of this content.
+
+Nonetheless, headless CMSes frustrate me! ...
+
+-> NOTES:
+don't allow flexible construction of content types on the fly. Fields are there or they are not. you can't compose your entry as you wish by adding or removing fields if they weren't initially accounted for. Means that whenever you want to be able to send unstructured data to the client, you will need to have a JSON field or similar where you can freely add stuff. Suddenly the editing experience becomes way less natural.
+Usually impossible to reuse field definition on multiple content types (so if we want to change the definition, we need to do it everywhere)
+if we want to implement schema.org spec, the fields we are going to use for every entry is really fluid. We may need different content structure for the same field (for example image can be a url or imageObject). And we need to be able to identify an event for example as both a `thing` and `event` or more complex, a `LocalBusiness` can be
+
+> a particular physical business or branch of an organization
+
+meaning it can inherit properties from an `Organization` or a `Place`
+
+Also not interested in git-based CMSes because usually the content has to live in the same repo than code. While it is ok for small one-off projects, it makes processes less repeatable
+
+---
