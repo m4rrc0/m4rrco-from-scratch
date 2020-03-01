@@ -4,12 +4,17 @@
   "description": "my personal website from 1 html page to a jamstack site builder",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist build",
+    "buildhtml": "npm run clean && node libs/buildhtml/index.js"
   },
   "keywords": [
     "personal site",
     "jamstack"
   ],
   "author": "Marc Coët <hello@m4rr.co>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "lodash.throttle": "^4.1.1"
+  }
 }
