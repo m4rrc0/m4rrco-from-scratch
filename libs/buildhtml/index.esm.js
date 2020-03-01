@@ -64,7 +64,7 @@ async function compile(srcPath, options) {
         ...svelteOptions,
         generate: 'ssr',
         hydratable: true,
-        format: 'cjs',
+        // format: 'cjs',
       })
       // second pass for js
       const clientApp =
@@ -138,7 +138,7 @@ async function compileHtml(destPath /*, options */) {
   const buildPath = `${destPath}`.replace(/^dist\//, 'build/')
   const pagePath = `${destPath}`.replace(/.js$/, '.html')
 
-  const srcPathSplit = buildPath.split('/')
+  const srcPathSplit = destPath.split('/')
   const fileName = srcPathSplit[srcPathSplit.length - 1]
 
   try {
