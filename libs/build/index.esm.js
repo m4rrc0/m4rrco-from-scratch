@@ -16,6 +16,8 @@ import * as babel from '@babel/core'
 import * as glob from 'glob'
 import * as terser from 'terser'
 import pLimit from 'p-limit'
+import throttle from 'lodash.throttle'
+import servor from 'servor'
 
 const exec = util.promisify(execSync)
 
@@ -31,21 +33,21 @@ const BABEL_CONFIG = existsSync('./babel.config.js')
           {
             // Append .js to all src file imports
             optionalExtensions: true,
+            importMap: '../dist/web_modules/import-map.json',
           },
         ],
       ],
     }
 
-async function compile(srcPath) {
+async function compile(srcPath, options, svelteOpts) {
+  const { outputDir = 'dist' } = options
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   let logSvelteWarnings = () => {}
 
   try {
-    const source = await fs.readFile(srcPath, 'utf8')
+    let source = await fs.readFile(srcPath, 'utf8')
     const isSvelte = srcPath.endsWith('.svelte')
 
-    let newSource = source
-    let buildSource = source
     // Only compile svelte files
     if (isSvelte) {
       const svelteOptions = {
@@ -54,24 +56,13 @@ async function compile(srcPath) {
         dev: !IS_PRODUCTION_MODE,
         hydratable: process.argv.includes('--hydratable'),
         immutable: process.argv.includes('--immutable'),
+        ...svelteOpts,
       }
-      // first pass for html
-      const ssrApp = svelte.compile(source, {
-        ...svelteOptions,
-        generate: 'ssr',
-        hydratable: true,
-        format: 'cjs',
-      })
-      // second pass for js
-      const clientApp = svelte.compile(source, {
-        ...svelteOptions,
-        // hydrate: true, // output hydrating js
-      })
 
-      // const result = svelte.compile(source, svelteOptions);
+      const result = svelte.compile(source, svelteOptions)
 
       logSvelteWarnings = () => {
-        clientApp.warnings.forEach(warning => {
+        result.warnings.forEach(warning => {
           console.log('')
           console.warn(
             '\x1b[33m%s\x1b[0m',
@@ -81,62 +72,22 @@ async function compile(srcPath) {
         })
       }
 
-      newSource = clientApp.js.code
-      buildSource = ssrApp.js.code
+      source = result.js.code
     }
 
-    // console.log(Comp.render);
-
-    // const { head, html, css } = Comp.render({
-    //     // answer: 42,
-    // });
-
     const destPath = srcPath
-      .replace(/^src\//, 'dist/')
+      .replace(/^src\//, `${outputDir}/`)
       .replace(/.svelte$/, '.js')
-    const destBuild = destPath.replace(/^dist\//, 'build/')
 
     // Create all ancestor directories for this file
     await fs.mkdir(path.dirname(destPath), { recursive: true })
-    await fs.writeFile(destPath, newSource)
-
-    await fs.mkdir(path.dirname(destBuild), { recursive: true })
-    await fs.writeFile(destBuild, buildSource)
-
-    // await fs.writeFile(
-    //     destHtml,
-    //     `
-    // <!DOCTYPE html>
-    // <html lang="en">
-    //     <head>
-    //         <meta charset="utf-8" />
-    //         <meta name="viewport" content="width=device-width, initial-scale=1" />
-    //         ${head}
-    //         <style>${css && css.code}</style>
-    //     </head>
-
-    //     <body>
-    //         <div id="app">${html}</div>
-
-    //         <script type="module">
-    //             import Comp from './${fileName}';
-
-    //             new Comp({
-    //                 target: document.querySelector('#app'),
-    //                 hydrate: true
-    //             });
-    //         </script>
-    //     </body>
-    // </html>
-    // `
-    // );
+    await fs.writeFile(destPath, source)
 
     console.info(`Svelte compiled ${destPath}`)
 
     return {
       destPath,
       logSvelteWarnings,
-      destBuild,
     }
   } catch (err) {
     console.log('')
@@ -150,88 +101,70 @@ async function compile(srcPath) {
   }
 }
 
-async function compileHtml(outJsPath) {
-  const buildPath = `${outJsPath}`.replace(/^dist\//, 'build/')
-  // srcPath is the js file output by compile
-  const Comp = require(path.join(process.cwd(), buildPath)).default
-  // const App = require('../examples/basic/src/App.svelte').default;
+async function compileHtml(destPath /*, options */) {
+  // TODO: Exclude processing if this is not a page
 
-  console.log({ Comp })
+  const buildPath = `${destPath}`.replace(/^dist\//, 'build/')
+  const pagePath = `${destPath}`.replace(/.js$/, '.html')
 
-  const htmlPath = outJsPath.replace(/.js$/, '.html')
-  const srcPathSplit = buildPath.split('/')
+  const srcPathSplit = destPath.split('/')
   const fileName = srcPathSplit[srcPathSplit.length - 1]
-  console.log({ fileName })
 
-  const { head, html, css } = Comp.render({
-    answer: 42,
-  })
+  try {
+    // buildPath is the js file compile for ssr
+    const Comp = require(path.join(process.cwd(), buildPath)).default
 
-  // const destPath = 'dist/index.html';
-  // Create all ancestor directories for this file
-  // await fs.mkdir(path.dirname(destPath), { recursive: true });
-  //     await fs.writeFile(
-  //         destPath,
-  //         `
-  // <!DOCTYPE html>
-  // <html lang="en">
-  //     <head>
-  //         <meta charset="utf-8" />
-  //         <meta name="viewport" content="width=device-width, initial-scale=1" />
-  //         ${head}
-  //         <style>${css.code}</style>
-  //     </head>
+    const { head, html, css } = Comp.render({
+      answer: 42,
+    })
 
-  //     <body>
-  //         <div id="app">${html}</div>
+    await fs.mkdir(path.dirname(pagePath), { recursive: true })
+    await fs.writeFile(
+      pagePath,
+      `
+  <!DOCTYPE html>
+  <html lang="en">
+      <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          ${head}
+          <style>${css && css.code}</style>
+      </head>
+  
+      <body>
+          <div id="app">${html}</div>
+  
+          <script type="module">
+              import Comp from './${fileName}';
+  
+              new Comp({
+                  target: document.querySelector('#app'),
+                  hydrate: true
+              });
+          </script>
+      </body>
+  </html>
+  `
+    )
 
-  //         <script type="module">
-  //             import App from './App.js';
-
-  //             new App({
-  //                 target: document.querySelector('#app'),
-  //                 hydrate: true
-  //             });
-  //         </script>
-  //     </body>
-  // </html>
-  // `
-  //     );
-  await fs.writeFile(
-    htmlPath,
-    `
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        ${head}
-        <style>${css && css.code}</style>
-    </head>
-
-    <body>
-        <div id="app">${html}</div>
-
-        <script type="module">
-            import Comp from './${fileName}';
-
-            new Comp({
-                target: document.querySelector('#app'),
-                hydrate: true
-            });
-        </script>
-    </body>
-</html>
-`
-  )
+    return { pagePath }
+  } catch (err) {
+    console.log('')
+    console.error(`Failed to compile page: ${pagePath}`)
+    console.error(err)
+    console.log('')
+    return {
+      pagePath: null,
+    }
+  }
 }
 
 async function copyFile(srcPath) {
   const destPath = srcPath.replace(/^src\//, 'dist/')
   // Create all ancestor directories for this file
   await fs.mkdir(path.dirname(destPath), { recursive: true })
-  // await fs.copyFile(srcPath, destPath);
-  // console.info(`Copied asset ${destPath}`);
+  await fs.copyFile(srcPath, destPath)
+  console.info(`Copied asset ${destPath}`)
 }
 
 // Update the import paths to correctly point to web_modules.
@@ -271,7 +204,7 @@ async function minify(destPath) {
 }
 
 // Only needs to run during the initial compile cycle. If a developer adds a new package dependency,
-// they should restart svelvet.
+// they should restart.
 const snowpack = async () => {
   const maybeOptimize = IS_PRODUCTION_MODE ? '--optimize' : ''
 
@@ -310,7 +243,7 @@ async function initialBuild() {
     globConfig
   )
   const otherAssetFiles = glob.sync(
-    'src/**/*.!(spec.[tj]s|test.[tj]s|[tj]s|mjs|svelte)',
+    'src/**/*.!(spec.[tj]s|test.[tj]s|[tj]s|mjs|svelte|md)',
     globConfig
   )
 
@@ -326,9 +259,49 @@ async function initialBuild() {
   const destFiles = await Promise.all(
     svelteAndJsFiles.map(srcPath =>
       concurrencyLimit(async () => {
-        const { destPath, logSvelteWarnings } = await compile(srcPath)
+        const { destPath, logSvelteWarnings } = await compile(
+          srcPath,
+          {
+            outputDir: 'dist',
+          },
+          {
+            hydratable: true,
+          }
+        )
+
         svelteWarnings.push(logSvelteWarnings)
         return destPath
+      })
+    )
+  )
+
+  // Compile all source files with svelte for SSR.
+  const buildFiles = await Promise.all(
+    svelteAndJsFiles.map(srcPath =>
+      concurrencyLimit(async () => {
+        const { destPath, logSvelteWarnings } = await compile(
+          srcPath,
+          {
+            outputDir: 'build',
+          },
+          {
+            generate: 'ssr',
+            hydratable: true,
+          }
+        )
+
+        svelteWarnings.push(logSvelteWarnings)
+        return destPath
+      })
+    )
+  )
+
+  // Compile html files from temp js components in build folder.
+  const pages = await Promise.all(
+    destFiles.map(destPath =>
+      concurrencyLimit(async () => {
+        const { pagePath } = await compileHtml(destPath, {})
+        return pagePath
       })
     )
   )
@@ -341,8 +314,6 @@ async function initialBuild() {
     destFiles.map(destPath =>
       concurrencyLimit(async () => {
         if (!destPath) return
-        // compile static html
-        await compileHtml(destPath)
         await transform(destPath)
       })
     )
@@ -365,10 +336,10 @@ async function initialBuild() {
 }
 
 function startWatchMode() {
-  console.info(`Watching for files...`)
+  console.info(`\nWatching for files...`)
 
   const handleFile = async srcPath => {
-    // Copy updated non-js/svelte files
+    // Copy updated non-js/non-svelte files
     if (
       !srcPath.endsWith('.svelte') &&
       !srcPath.endsWith('.js') &&
@@ -378,7 +349,12 @@ function startWatchMode() {
       return
     }
 
-    const { destPath, logSvelteWarnings } = await compile(srcPath)
+    const { destPath, logSvelteWarnings } = await compile(srcPath, {
+      // htmlOnly: true,
+    })
+    const { pagePath } = await compileHtml(destPath, {
+      // htmlOnly: true,
+    })
     if (!destPath) return
     await transform(destPath)
     logSvelteWarnings()
@@ -390,12 +366,31 @@ function startWatchMode() {
   })
 
   srcWatcher.on('add', handleFile)
-  srcWatcher.on('change', handleFile)
+  // Throttle duplicate change events to prevent unnecessary recompiles
+  srcWatcher.on('change', throttle(handleFile, 500, { trailing: false }))
+  // srcWatcher.on('change', handleFile)
+}
+
+async function startDevServer() {
+  if (process.argv.includes('--no-serve')) return
+  const { url } = await servor({
+    root: './dist',
+    fallback: 'index.html',
+    port: 8080,
+    reload: true,
+  })
+  console.info(`Server running on ${url}`)
 }
 
 async function main() {
+  // const outputDirectory = 'public'
+  // const inputDirectory = 'src'
+  // const pages = ['index/index.svelte']
+
   await initialBuild()
-  if (!IS_PRODUCTION_MODE) startWatchMode()
+  if (IS_PRODUCTION_MODE) return
+  startWatchMode()
+  startDevServer()
 }
 
 main()

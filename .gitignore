@@ -73,3 +73,6 @@ __sapper__
 .ssg
 # Local Netlify folder
 .netlify
+
+build/
+dist/
