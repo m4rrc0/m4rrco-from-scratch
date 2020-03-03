@@ -1,4 +1,6 @@
 <script>
+  import ColorButton from "./components/ColorButton";
+
   let color = "blue";
 
   const changeColor = () => {
@@ -6,10 +8,15 @@
   };
 </script>
 
-<div style={`color:${color}`}>
+<style>
+  .js-test-block {
+    padding: 0.5rem;
+    border: solid 1px currentcolor;
+  }
+</style>
+
+<div>
   <h1>Hey, I'm m4rrc0</h1>
-  <h2>blop</h2>
-  <button on:click={changeColor}>Change me with JS</button>
   <p>This is my contribution to the web. Impressive, right?!</p>
   <p>As you can see there is not much here yet. Here is a story for you:</p>
   <p>
@@ -47,4 +54,14 @@
     will benefit everyone (including me).
   </p>
   <p>Feedbacks are greatly appreciated.</p>
+</div>
+
+<div class="js-test-block" style={`color:${color}`}>
+  <p>
+    This website is built using svelte and svelvet. Static HTML files are
+    hydrated with standard JS esm modules.
+    <br />
+    The button below allows me to test if JS is loaded properly. ;)
+  </p>
+  <ColorButton onClick={changeColor} />
 </div>
