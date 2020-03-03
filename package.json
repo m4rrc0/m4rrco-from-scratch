@@ -26,10 +26,15 @@
     "lodash.throttle": "^4.1.1",
     "p-limit": "^2.2.2",
     "rimraf": "^3.0.2",
+    "rollup-plugin-svelte": "^5.1.1",
     "servor": "^3.2.0",
     "snowpack": "^1.5.1",
     "svelte": "^3.19.1",
     "svelvet": "^0.3.6",
     "terser": "^4.6.4"
+  },
+  "dependencies": {
+    "page": "^1.11.5",
+    "svelte-routing": "^1.4.1"
   }
 }
