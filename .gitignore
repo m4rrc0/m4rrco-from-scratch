@@ -74,5 +74,5 @@ __sapper__
 # Local Netlify folder
 .netlify
 
-build/
-dist/
+/build/
+/dist/
