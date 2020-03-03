@@ -14,7 +14,7 @@ import {
   minify,
   // startWatchMode,
   startDevServer,
-} from './svelvet'
+} from './svelvet.js'
 
 const IS_PRODUCTION_MODE = process.env.NODE_ENV === 'production'
 
