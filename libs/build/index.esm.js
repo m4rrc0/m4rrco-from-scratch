@@ -72,24 +72,28 @@ export function startWatchMode() {
   srcWatcher.on('change', throttle(handleFile, 500, { trailing: false }))
 }
 
-async function compileHtml(destPath /*, options */) {
+async function compileHtml(pageDef /*, options */) {
+  const { path: p, name, component, data } = pageDef
   // TODO: Exclude processing if this is not a page
 
-  const buildPath = `${destPath}`.replace(/^dist\//, 'build/')
-  const pagePath = `${destPath}`.replace(/.js$/, '.html')
+  // const buildPath = `${destPath}`.replace(/^dist\//, 'build/')
+  // const pagePath = `${destPath}`.replace(/.js$/, '.html')
 
-  const srcPathSplit = destPath.split('/')
-  const fileName = srcPathSplit[srcPathSplit.length - 1]
+  // const srcPathSplit = destPath.split('/')
+  // const fileName = srcPathSplit[srcPathSplit.length - 1]
+
+  const buildPath = `build/${component}`.replace(/^dist\//, 'build/')
+  const pagePath = p === '/' ? 'dist/index.html' : `dist${p}/index.html`
+  const importPath = component
 
   try {
     // buildPath is the js file compile for ssr
-    console.log({ buildPath })
-    console.log(path.join(process.cwd(), buildPath))
     const Comp = require(path.join(process.cwd(), buildPath)).default
 
     const { head, html, css } = Comp.render({
-      answer: 42,
+      ...data,
     })
+    console.log({ pagePath })
 
     await fs.mkdir(path.dirname(pagePath), { recursive: true })
     await fs.writeFile(
@@ -108,7 +112,7 @@ async function compileHtml(destPath /*, options */) {
           <div id="app">${html}</div>
 
           <script type="module">
-              import Comp from './${fileName}';
+              import Comp from '/${importPath}';
 
               new Comp({
                   target: document.querySelector('#app'),
@@ -144,7 +148,7 @@ async function compileHtml(destPath /*, options */) {
           <div id="app"></div>
 
           <script type="module">
-              import Comp from './${fileName}';
+              import Comp from './${importPath}';
 
               new Comp({
                   target: document.querySelector('#app'),
@@ -268,16 +272,19 @@ export async function initialBuild() {
     )
   )
 
-  const routes = ['dist/index.js']
+  // const routes = ['dist/index.js']
+  const routes =
+    require(path.join(process.cwd(), '/src/routes.js')).default || []
 
   // Compile html files from temp js components in build folder.
   const pages = await Promise.all(
-    routes.map(destPath =>
+    routes.map(pageDef => {
+      const { path, name, component, data } = pageDef
       concurrencyLimit(async () => {
-        const { pagePath } = await compileHtml(destPath, {})
+        const { pagePath } = await compileHtml(pageDef, {})
         return pagePath
       })
-    )
+    })
   )
 
   // Minify js files with terser if in production.

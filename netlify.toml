@@ -6,3 +6,8 @@
   # Default build command.
   command = "npm run build"
   environment = { NODE_VERSION = "13" }
+
+  pretty_urls = true
+  bundle = false
+  minify = false
+  compress = false

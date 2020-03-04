@@ -11,9 +11,9 @@ module.exports = {
     // },
     plugins: [
       svelte({
-        generate: 'ssr',
-        hydratable: true,
-        dev: !IS_PRODUCTION_MODE,
+        // generate: 'ssr',
+        // hydratable: true,
+        // dev: !IS_PRODUCTION_MODE,
       }),
     ],
     // external: Object.keys(pkg.dependencies).concat(

@@ -363,7 +363,7 @@ export async function startDevServer() {
   if (process.argv.includes('--no-serve')) return
   const { url } = await servor({
     root: './dist',
-    fallback: 'index.html',
+    fallback: '404.html',
     port: 8080,
     reload: true,
   })
