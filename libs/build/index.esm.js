@@ -4,7 +4,9 @@ import * as glob from 'glob'
 import pLimit from 'p-limit'
 import * as path from 'path'
 import throttle from 'lodash.throttle'
+import liveServer from 'live-server'
 
+import slugify from '../../utils/slugify'
 import {
   cleanDist,
   copyFile,
@@ -13,7 +15,7 @@ import {
   transform,
   minify,
   // startWatchMode,
-  startDevServer,
+  // startDevServer,
 } from './svelvet'
 
 const IS_PRODUCTION_MODE = process.env.NODE_ENV === 'production'
@@ -72,8 +74,33 @@ export function startWatchMode() {
   srcWatcher.on('change', throttle(handleFile, 500, { trailing: false }))
 }
 
+async function startDevServer() {
+  if (process.argv.includes('--no-serve')) return
+
+  var params = {
+    // host: '100.115.92.205', // Set the address to bind to. Defaults to 0.0.0.0 or process.env.IP.
+    root: 'dist', // Set root directory that's being served. Defaults to cwd.
+    file: '404.html', // When set, serve this file (server root relative) for every 404 (useful for single-page applications)
+    // port: 8080, // Set the server port. Defaults to 8080.
+    reload: true,
+    open: false, // When false, it won't load your browser by default.
+
+    // ignore: 'scss,my/templates', // comma-separated string for paths to ignore
+    // wait: 1000, // Waits for all changes, before reloading. Defaults to 0 sec.
+    // mount: [['/components', './node_modules']], // Mount a directory to a route.
+    // logLevel: 2, // 0 = errors only, 1 = some, 2 = lots
+    // middleware: [function(req, res, next) { next(); }] // Takes an array of Connect-compatible middleware that are injected into the server middleware stack
+  }
+  liveServer.start(params)
+  // console.info(`Server running on port ${params.port}`)
+}
+
 async function compileHtml(pageDef /*, options */) {
   const { path: p, name, component, data } = pageDef
+  if (!p || !component) {
+    console.log(`unable to create HTML for page ${name}`, pageDef)
+    return
+  }
   // TODO: Exclude processing if this is not a page
 
   // const buildPath = `${destPath}`.replace(/^dist\//, 'build/')
@@ -83,8 +110,10 @@ async function compileHtml(pageDef /*, options */) {
   // const fileName = srcPathSplit[srcPathSplit.length - 1]
 
   const buildPath = `build/${component}`.replace(/^dist\//, 'build/')
-  const pagePath = p === '/' ? 'dist/index.html' : `dist${p}/index.html`
-  const importPath = component
+  let pagePath = /index$/.test(p) ? p : `${p}/index`
+  pagePath = `dist${pagePath}.html`.replace(/\/+/, '/') // avoir double slashes in case path is '/' for example
+  // const pagePath = p === '/' ? 'dist/index.html' : `dist${p}/index.html`
+  const importPath = /.js$/.test(component) ? component : `${component}.js`
 
   try {
     // buildPath is the js file compile for ssr
@@ -93,30 +122,25 @@ async function compileHtml(pageDef /*, options */) {
     const { head, html, css } = Comp.render({
       ...data,
     })
-    console.log({ pagePath })
+    console.log({ p, pagePath, importPath })
 
     await fs.mkdir(path.dirname(pagePath), { recursive: true })
     await fs.writeFile(
       pagePath,
       `
   <!DOCTYPE html>
-  <html lang="en">
       <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           ${head}
           <style>${css && css.code}</style>
       </head>
-
       <body>
           <div id="app">${html}</div>
-
           <script type="module">
               import Comp from '/${importPath}';
-
               new Comp({
                   target: document.querySelector('#app'),
-                  hydrate: true
+                  hydrate: true,
+                  props: ${data && JSON.stringify(data)}
               });
           </script>
       </body>
@@ -132,39 +156,7 @@ async function compileHtml(pageDef /*, options */) {
     console.error(`Failed to compile page: ${pagePath}`)
     console.error(err)
     console.log('')
-
-    await fs.mkdir(path.dirname(pagePath), { recursive: true })
-    await fs.writeFile(
-      pagePath,
-      `
-  <!DOCTYPE html>
-  <html lang="en">
-      <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
-
-      <body>
-          <div id="app"></div>
-
-          <script type="module">
-              import Comp from './${importPath}';
-
-              new Comp({
-                  target: document.querySelector('#app'),
-                  hydrate: true
-              });
-          </script>
-      </body>
-  </html>
-  `
-    )
-
-    console.info(`Compiled fallback HTML ${pagePath}`)
-
-    return {
-      pagePath: null,
-    }
+    process.exit(1)
   }
 }
 
@@ -175,6 +167,10 @@ export async function initialBuild() {
   const globConfig = { nodir: true }
   const svelteAndJsFiles = glob.sync(
     'src/**/!(*+(spec|test)).+(js|mjs|svelte)',
+    globConfig
+  )
+  const svelteAndJsPages = glob.sync(
+    'src/pages/**/!(*+(spec|test)).+(js|mjs|svelte)',
     globConfig
   )
   const otherAssetFiles = glob.sync(
@@ -272,14 +268,46 @@ export async function initialBuild() {
     )
   )
 
-  // const routes = ['dist/index.js']
-  const routes =
+  const programmaticRoutes =
     require(path.join(process.cwd(), '/src/routes.js')).default || []
+
+  const autoRoutes = destFiles
+    .filter(r => /^dist\/pages\//.test(r))
+    .map(r => {
+      const component = r.replace('dist/', '')
+      const compSplit = component.split('/')
+      let name = compSplit[compSplit.length - 1].replace(/.js$/, '')
+      name =
+        name === 'index' && compSplit.length > 2
+          ? compSplit[compSplit.length - 2]
+          : name
+      // const p = slugify(component.replace('/pages', '').replace(/.js$/, ''))
+      let p = component.replace(/^pages/, '').replace(/.js$/, '')
+      // TODO: slugify should keep '/' characters so we don't have to split/join ?
+      p = p
+        .split('/')
+        .map(piece => slugify(piece))
+        .join('/')
+      return {
+        path: p,
+        name,
+        component,
+        data: {},
+      }
+    })
 
   // Compile html files from temp js components in build folder.
   const pages = await Promise.all(
-    routes.map(pageDef => {
-      const { path, name, component, data } = pageDef
+    autoRoutes.map(pageDef => {
+      concurrencyLimit(async () => {
+        const { pagePath } = await compileHtml(pageDef, {})
+        return pagePath
+      })
+    })
+  )
+  // Compile html files from temp js components in build folder.
+  const programmaticPages = await Promise.all(
+    programmaticRoutes.map(pageDef => {
       concurrencyLimit(async () => {
         const { pagePath } = await compileHtml(pageDef, {})
         return pagePath

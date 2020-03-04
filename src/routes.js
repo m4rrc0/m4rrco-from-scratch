@@ -3,20 +3,20 @@
 // import Template from './templates/index'
 
 export default [
-  {
-    path: '/',
-    name: 'Home',
-    component: 'templates/index',
-    data: {
-      text: 'Home Page',
-    },
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: 'templates/index',
-    data: {
-      text: 'About Page',
-    },
-  },
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: 'pages/index',
+  //   data: {
+  //     text: 'Home Page',
+  //   },
+  // },
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   component: 'templates/index',
+  //   data: {
+  //     text: 'About Page',
+  //   },
+  // },
 ]

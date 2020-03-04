@@ -23,6 +23,7 @@
     "es-module-lexer": "^0.3.17",
     "esm": "^3.2.25",
     "glob": "^7.1.6",
+    "live-server": "^1.2.1",
     "lodash.throttle": "^4.1.1",
     "p-limit": "^2.2.2",
     "rimraf": "^3.0.2",
