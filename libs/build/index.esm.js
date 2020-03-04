@@ -83,6 +83,8 @@ async function compileHtml(destPath /*, options */) {
 
   try {
     // buildPath is the js file compile for ssr
+    console.log({ buildPath })
+    console.log(path.join(process.cwd(), buildPath))
     const Comp = require(path.join(process.cwd(), buildPath)).default
 
     const { head, html, css } = Comp.render({
@@ -238,23 +240,13 @@ export async function initialBuild() {
   try {
     // Need to run this (only once) before transforming the import paths, or else it will fail.
     await snowpack('dist/**/*')
-    await snowpack('build/**/*')
+    await snowpack('build/**/*', { outputDir: '' })
   } catch (err) {
     console.error('\n\nFailed to build with snowpack')
     err && console.error(err.stderr || err)
     // Don't continue building...
     process.exit(1)
   }
-
-  // Compile html files from temp js components in build folder.
-  const pages = await Promise.all(
-    destFiles.map(destPath =>
-      concurrencyLimit(async () => {
-        const { pagePath } = await compileHtml(destPath, {})
-        return pagePath
-      })
-    )
-  )
 
   // Transform all generated js files with babel.
   await Promise.all(
@@ -272,6 +264,18 @@ export async function initialBuild() {
       concurrencyLimit(async () => {
         if (!destPath) return
         await transform(destPath, false)
+      })
+    )
+  )
+
+  const routes = ['dist/index.js']
+
+  // Compile html files from temp js components in build folder.
+  const pages = await Promise.all(
+    routes.map(destPath =>
+      concurrencyLimit(async () => {
+        const { pagePath } = await compileHtml(destPath, {})
+        return pagePath
       })
     )
   )

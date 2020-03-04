@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf dist build",
+    "clean": "rm -rf dist build web_modules",
     "build": "npm run clean && NODE_ENV=production node libs/build/index.js --hydratable",
     "dev": "npm run clean && node libs/build/index.js --hydratable",
     "serve": "serve --listen 8080 --single dist",

@@ -1,12 +1,20 @@
 <script>
-  import Link from "./Link";
-  import Route from "./Route";
-  export let name;
+  import { Router, Link, Route } from "svelte-routing";
+  import Home from "./pages/Home";
+  import About from "./pages/About";
+
+  export let url = "";
 </script>
 
-<!-- Navigation goes here -->
-<Link page={{ path: '/', name: 'Home' }} />
-<Link page={{ path: '/about', name: 'About' }} />
-
-<!-- Main container goes here -->
-<Route />
+<Router {url}>
+  <nav>
+    <Link to="/">Home</Link>
+    <Link to="about">About</Link>
+  </nav>
+  <div>
+    <Route path="about" component={About} />
+    <Route path="/">
+      <Home />
+    </Route>
+  </div>
+</Router>

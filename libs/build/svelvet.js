@@ -223,7 +223,8 @@ export async function checkForNewWebModules(transformedSource) {
 
 // Only needs to run once during the initial compile cycle. However, if a new import is found
 // in dev mode, snowpack will be ran again.
-export async function snowpack(includeFiles) {
+export async function snowpack(includeFiles, options = {}) {
+  const { outputDir = 'dist' } = options
   const maybeOptimize = IS_PRODUCTION_MODE ? '--optimize' : ''
   const maybeStats = IS_PRODUCTION_MODE ? '--stat' : ''
 
@@ -242,7 +243,7 @@ export async function snowpack(includeFiles) {
         '--include',
         includeFiles,
         '--dest',
-        'dist/web_modules',
+        `${outputDir && `${outputDir}/`}web_modules`,
         maybeOptimize,
         maybeStats,
       ],
