@@ -8,7 +8,7 @@
     "clean": "rm -rf dist build web_modules",
     "build": "npm run clean && NODE_ENV=production node libs/build/index.js --hydratable --preprocess preprocessors.js",
     "dev": "npm run clean && node libs/build/index.js --hydratable --preprocess preprocessors.js",
-    "serve": "serve --listen 8080 --single dist",
+    "serve": "live-server --no-browser --root=dist",
     "svelvet:dev": "svelvet",
     "svelvet:build": "NODE_ENV=production svelvet"
   },

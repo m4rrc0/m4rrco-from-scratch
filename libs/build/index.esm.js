@@ -238,7 +238,8 @@ export async function initialBuild() {
   try {
     // Need to run this (only once) before transforming the import paths, or else it will fail.
     await snowpack('dist/**/*')
-    await snowpack('build/**/*', { outputDir: '' })
+    // await snowpack('build/**/*', { outputDir: '' })
+    await snowpack('build/**/*', { outputDir: 'build' })
   } catch (err) {
     console.error('\n\nFailed to build with snowpack')
     err && console.error(err.stderr || err)
