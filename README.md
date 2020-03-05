@@ -102,3 +102,65 @@ Do you earn a decent salary and want to help me build this thing and produce val
 Are you a company wanting to sponsor this work? Contact me at contact+SPAM@m4rr.co (remove the "+SPAM").
 
 Do you have questions? Feel free to ask at info+SPAM@m4rr.co (guess what you should remove...) or ping me [on twitter](https://twitter.com/m4rrc0).
+
+---
+
+## Notes on how to use this project
+
+### How files are created
+
+Every `.svelte`, `.js` and `.md` files in the `src` folder are converted to `.js` files automatically.
+Every dependency is placed in a `web_modules` folder by snowpack.
+
+### Pages
+
+Every file in `src/pages` folder and sub-folders will get picked up and create an HTML equivalent starting at the root instead of the `pages` folder. Ex: `src/pages/blog/one.svelte` will create an html file at `dist/blog/one/index.html` (and will also create a `.js` file at `dist/pages/blog/one.js`).
+
+There is also a programmatic way of creating pages. create a file at `src/routes.js` like so
+
+```javascript
+export default [
+  {
+    path: '/',
+    name: 'Home',
+    component: 'pages/index',
+    data: {
+      text: 'Home Page',
+      whatever: 'you want',
+    },
+  },
+  {
+    path: '/about/',
+    name: 'About',
+    component: 'templates/index',
+    data: {
+      text: 'About Page',
+    },
+  },
+]
+```
+
+The `component` property intentionally bares no reference to the 'root' folder it leaves in and the extension (`.svelte` for example).
+
+Watch out because programmatic pages will replace implied pages from the `src/pages` folder
+
+### MDsveX
+
+This uses MDsveX to allow creation of pages in markdown.
+
+You need to:
+
+- use the `md` extension
+- specify the layout in each md file's frontmatter as something like `layout: ../../layouts/index.js`
+  - note the `.js` extension even though your layout is probably a `.svelte` file
+
+### TODO
+
+Generally, generating html files tend to trigger issues. We should evaluate using a more traditional build process with Rollup for example for the SSR files we need to generate HTML. The problem is we will end up with two different build setup and it may introduce inconsistencies... Maybe a more solid babel setup can prevent issues when resolving dependencies.
+
+- Look for creating an SPA that takes over after HTML instead of per-page js loading
+  - This should be feasible by loading the full SPA no mather the page we launch and passing the path as prop
+  - There is currently issues when using external packages like `svelte-routing`. Something like `<Router> is not a valid SSR component` even though `svelte-routing` claims to be SSR ready...
+- Avoid loading JS entirely if there is no JS needed on the page
+- Look at the Babel config to customize the default svelvet/snowpack
+  - the way paths to dependencies are modified is very rigid and we need to hack around so that they resolve as we expect

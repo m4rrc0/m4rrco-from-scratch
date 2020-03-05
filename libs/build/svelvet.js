@@ -65,7 +65,8 @@ export async function compile(srcPath, options, svelteOpts) {
 
   try {
     let source = await fs.readFile(srcPath, 'utf8')
-    const isSvelte = srcPath.endsWith('.svelte')
+    // const isSvelte = srcPath.endsWith('.svelte')
+    const isSvelte = /.svelte$|.md$/.test(srcPath)
 
     // Only compile svelte files
     if (isSvelte) {
@@ -104,7 +105,10 @@ export async function compile(srcPath, options, svelteOpts) {
       source = result.js.code
     }
 
-    const destPath = getDestPath(srcPath, outputDir).replace(/.svelte$/, '.js')
+    const destPath = getDestPath(srcPath, outputDir).replace(
+      /.svelte$|.md$/,
+      '.js'
+    )
     // Create all ancestor directories for this file
     await fs.mkdir(path.dirname(destPath), { recursive: true })
     await fs.writeFile(destPath, source)

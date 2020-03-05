@@ -1,3 +1,7 @@
+---
+layout: ../../templates/index.js
+---
+
 # A look at data structure for the web and beyond
 
 Structured data is important for the web. It helps for SEO and as the web grows exponentially it is supposed to help us make sense of this fog of data.

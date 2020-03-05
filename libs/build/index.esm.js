@@ -98,7 +98,7 @@ async function startDevServer() {
 async function compileHtml(pageDef /*, options */) {
   const { path: p, name, component, data } = pageDef
   if (!p || !component) {
-    console.log(`unable to create HTML for page ${name}`, pageDef)
+    console.error(`unable to create HTML for page ${name}`, pageDef)
     return
   }
   // TODO: Exclude processing if this is not a page
@@ -108,6 +108,8 @@ async function compileHtml(pageDef /*, options */) {
 
   // const srcPathSplit = destPath.split('/')
   // const fileName = srcPathSplit[srcPathSplit.length - 1]
+
+  console.log({ p, name, component, data })
 
   const buildPath = `build/${component}`.replace(/^dist\//, 'build/')
   let pagePath = /index$/.test(p) ? p : `${p}/index`
@@ -166,11 +168,7 @@ export async function initialBuild() {
   const concurrencyLimit = pLimit(8)
   const globConfig = { nodir: true }
   const svelteAndJsFiles = glob.sync(
-    'src/**/!(*+(spec|test)).+(js|mjs|svelte)',
-    globConfig
-  )
-  const svelteAndJsPages = glob.sync(
-    'src/pages/**/!(*+(spec|test)).+(js|mjs|svelte)',
+    'src/**/!(*+(spec|test)).+(js|mjs|svelte|md)',
     globConfig
   )
   const otherAssetFiles = glob.sync(

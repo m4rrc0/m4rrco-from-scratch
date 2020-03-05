@@ -1,4 +1,5 @@
 ---
+layout: ../../templates/index.js
 draft: true
 ---
 

@@ -1,3 +1,7 @@
+---
+layout: ../../templates/index.js
+---
+
 ## What does it take
 
 - data structure (both for CMS and website structure)

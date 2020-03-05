@@ -1,3 +1,7 @@
+---
+layout: ../../templates/index.js
+---
+
 buttons have been designed with CSS for some time now and I don't really see how
 
 ```
