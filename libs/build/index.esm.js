@@ -239,7 +239,7 @@ export async function initialBuild() {
     // Need to run this (only once) before transforming the import paths, or else it will fail.
     await snowpack('dist/**/*')
     // await snowpack('build/**/*', { outputDir: '' })
-    await snowpack('build/**/*', { outputDir: 'build' })
+    // await snowpack('build/**/*', { outputDir: `${process.cwd()}/build` })
   } catch (err) {
     console.error('\n\nFailed to build with snowpack')
     err && console.error(err.stderr || err)
@@ -258,14 +258,14 @@ export async function initialBuild() {
   )
 
   // Transform all build js files with babel.
-  await Promise.all(
-    buildFiles.map(destPath =>
-      concurrencyLimit(async () => {
-        if (!destPath) return
-        await transform(destPath, false)
-      })
-    )
-  )
+  // await Promise.all(
+  //   buildFiles.map(destPath =>
+  //     concurrencyLimit(async () => {
+  //       if (!destPath) return
+  //       await transform(destPath, false)
+  //     })
+  //   )
+  // )
 
   const programmaticRoutes =
     require(path.join(process.cwd(), '/src/routes.js')).default || []
