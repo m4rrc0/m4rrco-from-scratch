@@ -239,8 +239,6 @@ export async function snowpack(includeFiles, options = {}) {
     '../index.bin.js'
   )
 
-  console.log({ dirname: __dirname, cwd: process.cwd() })
-
   await new Promise((resolve, reject) => {
     const proc = spawn(
       'node',

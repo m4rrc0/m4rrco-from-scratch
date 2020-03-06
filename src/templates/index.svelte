@@ -11,8 +11,6 @@
 <nav>
   <a href="/">Home</a>
   <a href="/about/">About</a>
-  <a href="/test/">Test</a>
-  <a href="/test/one/">Test one</a>
 </nav>
 <slot>
   <h1>{text}</h1>
