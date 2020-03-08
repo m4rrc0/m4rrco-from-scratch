@@ -81,7 +81,7 @@ Current roadmap:
 - [ ] put this thing online
   - no style
   - basic html
-- [ ] mailing list and [Patreon](https://www.patreon.com/m4rrco)
+- [ ] [mailing list](https://tinyletter.com/m4rrc0) and [Patreon](https://www.patreon.com/m4rrco)
   - embedded form for mailing list
 - [ ] first article on "basic html setup"
 - [ ] smallest setup to be productive
@@ -158,9 +158,7 @@ You need to:
 
 Generally, generating html files tend to trigger issues. We should evaluate using a more traditional build process with Rollup for example for the SSR files we need to generate HTML. The problem is we will end up with two different build setup and it may introduce inconsistencies... Maybe a more solid babel setup can prevent issues when resolving dependencies.
 
-- Look for creating an SPA that takes over after HTML instead of per-page js loading
-  - This should be feasible by loading the full SPA no mather the page we launch and passing the path as prop
-  - There is currently issues when using external packages like `svelte-routing`. Something like `<Router> is not a valid SSR component` even though `svelte-routing` claims to be SSR ready...
+- ~~Look for creating an SPA that takes over after HTML instead of per-page js loading~~
 - Avoid loading JS entirely if there is no JS needed on the page
 - Look at the Babel config to customize the default svelvet/snowpack
   - the way paths to dependencies are modified is very rigid and we need to hack around so that they resolve as we expect

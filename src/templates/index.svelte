@@ -10,7 +10,8 @@
 
 <nav>
   <a href="/">Home</a>
-  <a href="/about/">About</a>
+  <a href="/blog/">Blog</a>
+  <a href="/tests/">Tests</a>
 </nav>
 <slot>
   <h1>{text}</h1>

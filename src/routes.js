@@ -4,21 +4,11 @@
 
 export default [
   {
-    path: '/',
-    name: 'Home',
-    component: 'pages/index',
-    data: {
-      url: '/',
-      text: 'Home Page',
-    },
-  },
-  {
-    path: '/about/',
-    name: 'About',
-    component: 'pages/index',
-    data: {
-      url: '/about/',
-      text: 'About Page',
-    },
-  },
-]
+    path: "/tests/spa/one/",
+    name: "SPA: Test one",
+    component: "_pages/tests/spa/index",
+    props: {
+      // url: "/tests/spa/one/"
+    }
+  }
+];

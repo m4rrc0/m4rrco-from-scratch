@@ -1,105 +1,109 @@
-import { promises as fs, existsSync } from 'fs'
-import * as chokidar from 'chokidar'
-import * as glob from 'glob'
-import pLimit from 'p-limit'
-import * as path from 'path'
-import throttle from 'lodash.throttle'
-import liveServer from 'live-server'
+import { promises as fs, existsSync } from "fs";
+import * as chokidar from "chokidar";
+import * as glob from "glob";
+import pLimit from "p-limit";
+import * as path from "path";
+import throttle from "lodash.throttle";
+import liveServer from "live-server";
 
-import slugify from '../../utils/slugify'
+import slugify from "../../utils/slugify";
 import {
   cleanDist,
   copyFile,
   compile,
   snowpack,
   transform,
-  minify,
+  minify
   // startWatchMode,
   // startDevServer,
-} from './svelvet'
+} from "./svelvet";
 
-const IS_PRODUCTION_MODE = process.env.NODE_ENV === 'production'
+const IS_PRODUCTION_MODE = process.env.NODE_ENV === "production";
 
 export function startWatchMode() {
-  console.info(`\nWatching for files...`)
+  console.info(`\nWatching for files...`);
 
   const handleFile = async srcPath => {
     // Copy updated non-js/svelte files
     if (
-      !srcPath.endsWith('.svelte') &&
-      !srcPath.endsWith('.js') &&
-      !srcPath.endsWith('.mjs')
+      !srcPath.endsWith(".svelte") &&
+      !srcPath.endsWith(".js") &&
+      !srcPath.endsWith(".mjs")
     ) {
-      copyFile(srcPath)
-      return
+      copyFile(srcPath);
+      return;
     }
 
     // const { destPath, logSvelteWarnings } = await compile(srcPath)
     const { destPath, logSvelteWarnings } = await compile(
       srcPath,
       {
-        outputDir: 'dist',
+        outputDir: "dist"
       },
       {
-        hydratable: true,
+        hydratable: true
       }
-    )
+    );
     const { buildPath, logSvelteWarnings: logSvelteWarnings2 } = await compile(
       srcPath,
       {
-        outputDir: 'build',
+        outputDir: "build"
       },
       {
-        generate: 'ssr',
-        hydratable: true,
+        generate: "ssr",
+        hydratable: true
         // format: 'cjs',
       }
-    )
+    );
 
-    const { pagePath } = await compileHtml(destPath, {})
+    if (!destPath) return;
+    await transform(destPath, true);
+    logSvelteWarnings();
+    logSvelteWarnings2();
 
-    if (!destPath) return
-    await transform(destPath, true)
-    logSvelteWarnings()
-    logSvelteWarnings2()
-  }
+    if (isPage(destPath)) {
+      const pageDef = makePageDef(destPath);
+      const { pagePath } = await compileHtml(pageDef, {});
+    }
+  };
 
-  const srcWatcher = chokidar.watch('src', {
+  const srcWatcher = chokidar.watch("src", {
     ignored: /(^|[/\\])\../, // Ignore dotfiles
-    ignoreInitial: true, // Don't fire "add" events when starting the watcher
-  })
+    ignoreInitial: true // Don't fire "add" events when starting the watcher
+  });
 
-  srcWatcher.on('add', handleFile)
+  srcWatcher.on("add", handleFile);
   // Throttle duplicate change events to prevent unnecessary recompiles
-  srcWatcher.on('change', throttle(handleFile, 500, { trailing: false }))
+  srcWatcher.on("change", throttle(handleFile, 500, { trailing: false }));
 }
 
 async function startDevServer() {
-  if (process.argv.includes('--no-serve')) return
+  if (process.argv.includes("--no-serve")) return;
 
   var params = {
     // host: '100.115.92.205', // Set the address to bind to. Defaults to 0.0.0.0 or process.env.IP.
-    root: 'dist', // Set root directory that's being served. Defaults to cwd.
-    file: '404.html', // When set, serve this file (server root relative) for every 404 (useful for single-page applications)
+    root: "dist", // Set root directory that's being served. Defaults to cwd.
+    file: "404.html", // When set, serve this file (server root relative) for every 404 (useful for single-page applications)
     // port: 8080, // Set the server port. Defaults to 8080.
     reload: true,
-    open: false, // When false, it won't load your browser by default.
+    open: false // When false, it won't load your browser by default.
 
     // ignore: 'scss,my/templates', // comma-separated string for paths to ignore
     // wait: 1000, // Waits for all changes, before reloading. Defaults to 0 sec.
     // mount: [['/components', './node_modules']], // Mount a directory to a route.
     // logLevel: 2, // 0 = errors only, 1 = some, 2 = lots
     // middleware: [function(req, res, next) { next(); }] // Takes an array of Connect-compatible middleware that are injected into the server middleware stack
-  }
-  liveServer.start(params)
+  };
+  liveServer.start(params);
   // console.info(`Server running on port ${params.port}`)
 }
 
 async function compileHtml(pageDef /*, options */) {
-  const { path: p, name, component, data } = pageDef
+  const { path: p, name, component, props: propsInit } = pageDef;
+  const props = { url: p, propsInit };
   if (!p || !component) {
-    console.error(`unable to create HTML for page ${name}`, pageDef)
-    return
+    console.error(`unable to create HTML for page ${name}`, pageDef);
+    return;
   }
   // TODO: Exclude processing if this is not a page
 
@@ -109,30 +113,31 @@ async function compileHtml(pageDef /*, options */) {
   // const srcPathSplit = destPath.split('/')
   // const fileName = srcPathSplit[srcPathSplit.length - 1]
 
-  console.log({ p, name, component, data })
+  // console.log({ p, name, component, props })
 
-  const buildPath = `build/${component}`.replace(/^dist\//, 'build/')
-  let pagePath = /index$/.test(p) ? p : `${p}/index`
-  pagePath = `dist${pagePath}.html`.replace(/\/+/, '/') // avoir double slashes in case path is '/' for example
+  const buildPath = `build/${component}`.replace(/^dist\//, "build/");
+  let pagePath = /index$/.test(p) ? p : `${p}/index`;
+  pagePath = `dist${pagePath}.html`.replace(/\/+/, "/"); // avoir double slashes in case path is '/' for example
   // const pagePath = p === '/' ? 'dist/index.html' : `dist${p}/index.html`
-  const importPath = /.js$/.test(component) ? component : `${component}.js`
+  const importPath = /.js$/.test(component) ? component : `${component}.js`;
 
   try {
     // buildPath is the js file compile for ssr
-    const Comp = require(path.join(process.cwd(), buildPath)).default
+    const Comp = require(path.join(process.cwd(), buildPath)).default;
 
     const { head, html, css } = Comp.render({
-      ...data,
-    })
-    console.log({ p, pagePath, importPath })
+      ...props
+    });
+    console.log({ p, pagePath, importPath });
 
-    await fs.mkdir(path.dirname(pagePath), { recursive: true })
+    await fs.mkdir(path.dirname(pagePath), { recursive: true });
     await fs.writeFile(
       pagePath,
       `
   <!DOCTYPE html>
       <head>
           ${head}
+          <link rel="stylesheet" type="text/css" href="/global.css">
           <style>${css && css.code}</style>
       </head>
       <body>
@@ -142,49 +147,89 @@ async function compileHtml(pageDef /*, options */) {
               new Comp({
                   target: document.querySelector('#app'),
                   hydrate: true,
-                  props: ${data && JSON.stringify(data)}
+                  props: ${props && JSON.stringify(props)}
               });
           </script>
       </body>
   </html>
   `
-    )
+    );
 
-    console.info(`Compiled HTML ${pagePath}`)
+    console.info(`Compiled HTML ${pagePath}`);
 
-    return { pagePath }
+    return { pagePath };
   } catch (err) {
-    console.log('')
-    console.error(`Failed to compile page: ${pagePath}`)
-    console.error(err)
-    console.log('')
-    process.exit(1)
+    console.log("");
+    console.error(`Failed to compile page: ${pagePath}`);
+    console.error(err);
+    console.log("");
+    process.exit(1);
   }
 }
 
-export async function initialBuild() {
-  if (IS_PRODUCTION_MODE) console.info(`Building in production mode...`)
+const programmaticRoutes =
+  require(path.join(process.cwd(), "/src/routes.js")).default || [];
 
-  const concurrencyLimit = pLimit(8)
-  const globConfig = { nodir: true }
+const isPage = destPath => {
+  // destPath is like "dist/_pages/tests/spa/index.js"
+  const isAutoRoute = /^dist\/_pages\//.test(destPath);
+  console.log({ isAutoRoute });
+
+  const component = destPath.replace("dist/", "");
+  const isProgrammaticRoute =
+    programmaticRoutes.filter(({ component: prComp }) => prComp === component)
+      .length > 0;
+  console.log({ isProgrammaticRoute });
+
+  return isAutoRoute || isProgrammaticRoute;
+};
+
+const makePageDef = destPath => {
+  const component = destPath.replace("dist/", "");
+  const compSplit = component.split("/");
+  let name = compSplit[compSplit.length - 1].replace(/.js$/, "");
+  name =
+    name === "index" && compSplit.length > 2
+      ? compSplit[compSplit.length - 2]
+      : name;
+  // const p = slugify(component.replace('/pages', '').replace(/.js$/, ''))
+  let p = component.replace(/^_pages/, "").replace(/.js$/, "");
+  // TODO: slugify should keep '/' characters so we don't have to split/join ?
+  p = p
+    .split("/")
+    .map(piece => slugify(piece))
+    .join("/");
+  return {
+    path: p,
+    name,
+    component,
+    data: {}
+  };
+};
+
+export async function initialBuild() {
+  if (IS_PRODUCTION_MODE) console.info(`Building in production mode...`);
+
+  const concurrencyLimit = pLimit(8);
+  const globConfig = { nodir: true };
   const svelteAndJsFiles = glob.sync(
-    'src/**/!(*+(spec|test)).+(js|mjs|svelte|md)',
+    "src/**/!(*+(spec|test)).+(js|mjs|svelte|md)",
     globConfig
-  )
+  );
   const otherAssetFiles = glob.sync(
-    'src/**/*.!(spec.[tj]s|test.[tj]s|[tj]s|mjs|svelte|md)',
+    "src/**/*.!(spec.[tj]s|test.[tj]s|[tj]s|mjs|svelte|md)",
     globConfig
-  )
+  );
 
   // Just copy all other asset types, no point in reading them.
   await Promise.all(
     otherAssetFiles.map(srcPath =>
       concurrencyLimit(async () => copyFile(srcPath))
     )
-  )
+  );
 
   // Compile all source files with svelte.
-  const svelteWarnings = []
+  const svelteWarnings = [];
   // const destFiles = await Promise.all(
   //   svelteAndJsFiles.map(srcPath =>
   //     concurrencyLimit(async () => {
@@ -200,18 +245,18 @@ export async function initialBuild() {
         const { destPath, logSvelteWarnings } = await compile(
           srcPath,
           {
-            outputDir: 'dist',
+            outputDir: "dist"
           },
           {
-            hydratable: true,
+            hydratable: true
           }
-        )
+        );
 
-        svelteWarnings.push(logSvelteWarnings)
-        return destPath
+        svelteWarnings.push(logSvelteWarnings);
+        return destPath;
       })
     )
-  )
+  );
 
   // Compile all source files with svelte for SSR.
   const buildFiles = await Promise.all(
@@ -220,41 +265,41 @@ export async function initialBuild() {
         const { destPath, logSvelteWarnings } = await compile(
           srcPath,
           {
-            outputDir: 'build',
+            outputDir: "build"
           },
           {
-            generate: 'ssr',
-            hydratable: true,
+            generate: "ssr",
+            hydratable: true
             // format: 'cjs',
           }
-        )
+        );
 
-        svelteWarnings.push(logSvelteWarnings)
-        return destPath
+        svelteWarnings.push(logSvelteWarnings);
+        return destPath;
       })
     )
-  )
+  );
 
   try {
     // Need to run this (only once) before transforming the import paths, or else it will fail.
-    await snowpack('dist/**/*')
+    await snowpack("dist/**/*");
     // await snowpack('build/**/*', { outputDir: '' })
   } catch (err) {
-    console.error('\n\nFailed to build with snowpack')
-    err && console.error(err.stderr || err)
+    console.error("\n\nFailed to build with snowpack");
+    err && console.error(err.stderr || err);
     // Don't continue building...
-    process.exit(1)
+    process.exit(1);
   }
 
   // Transform all generated js files with babel.
   await Promise.all(
     destFiles.map(destPath =>
       concurrencyLimit(async () => {
-        if (!destPath) return
-        await transform(destPath, false)
+        if (!destPath) return;
+        await transform(destPath, false);
       })
     )
-  )
+  );
 
   // Transform all build js files with babel.
   // await Promise.all(
@@ -266,75 +311,72 @@ export async function initialBuild() {
   //   )
   // )
 
-  const programmaticRoutes =
-    require(path.join(process.cwd(), '/src/routes.js')).default || []
-
   const autoRoutes = destFiles
-    .filter(r => /^dist\/pages\//.test(r))
+    .filter(r => /^dist\/_pages\//.test(r))
     .map(r => {
-      const component = r.replace('dist/', '')
-      const compSplit = component.split('/')
-      let name = compSplit[compSplit.length - 1].replace(/.js$/, '')
+      const component = r.replace("dist/", "");
+      const compSplit = component.split("/");
+      let name = compSplit[compSplit.length - 1].replace(/.js$/, "");
       name =
-        name === 'index' && compSplit.length > 2
+        name === "index" && compSplit.length > 2
           ? compSplit[compSplit.length - 2]
-          : name
+          : name;
       // const p = slugify(component.replace('/pages', '').replace(/.js$/, ''))
-      let p = component.replace(/^pages/, '').replace(/.js$/, '')
+      let p = component.replace(/^_pages/, "").replace(/.js$/, "");
       // TODO: slugify should keep '/' characters so we don't have to split/join ?
       p = p
-        .split('/')
+        .split("/")
         .map(piece => slugify(piece))
-        .join('/')
+        .join("/");
       return {
         path: p,
         name,
         component,
-        data: {},
-      }
-    })
+        data: {}
+      };
+    });
 
   // Compile html files from temp js components in build folder.
   const pages = await Promise.all(
     autoRoutes.map(pageDef => {
       concurrencyLimit(async () => {
-        const { pagePath } = await compileHtml(pageDef, {})
-        return pagePath
-      })
+        const { pagePath } = await compileHtml(pageDef, {});
+        return pagePath;
+      });
     })
-  )
+  );
   // Compile html files from temp js components in build folder.
   const programmaticPages = await Promise.all(
     programmaticRoutes.map(pageDef => {
       concurrencyLimit(async () => {
-        const { pagePath } = await compileHtml(pageDef, {})
-        return pagePath
-      })
+        const { pagePath } = await compileHtml(pageDef, {});
+        return pagePath;
+      });
     })
-  )
+  );
 
   // Minify js files with terser if in production.
-  if (IS_PRODUCTION_MODE && !process.argv.includes('--no-minify')) {
+  if (IS_PRODUCTION_MODE && !process.argv.includes("--no-minify")) {
     await Promise.all(
       destFiles.map(destPath =>
         concurrencyLimit(async () => {
-          if (!destPath) return
-          await minify(destPath)
+          if (!destPath) return;
+          await minify(destPath);
         })
       )
-    )
+    );
   }
 
   // Log all svelte warnings
-  svelteWarnings.forEach(f => f())
+  svelteWarnings.forEach(f => f());
 }
 
 async function main() {
-  await cleanDist()
-  await initialBuild()
-  if (IS_PRODUCTION_MODE) return
-  startWatchMode()
-  startDevServer()
+  await cleanDist();
+  await initialBuild();
+  if (IS_PRODUCTION_MODE) return;
+  startWatchMode();
+  startDevServer();
 }
 
-main()
+main();

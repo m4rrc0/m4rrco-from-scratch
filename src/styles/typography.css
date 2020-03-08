@@ -1,0 +1,49 @@
+:root {
+  /* FONTS */
+  --font-body: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --font-heading: "Barlow Condensed", "Helvetica", sans-serif;
+  --font-monospace: "Menlo", "Courier", "Courier New", "Andale Mono", monospace;
+}
+
+* {
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: var(
+    --font-body,
+    "Helvetica Neue",
+    "Helvetica",
+    "Arial",
+    sans-serif
+  );
+}
+
+h1,
+h1 *,
+h2,
+h2 *,
+h3,
+h3 *,
+h4,
+h4 *,
+h5,
+h5 *,
+h6,
+h6 * {
+  font-family: "Barlow Condensed", "Helvetica", sans-serif;
+  font-family: var(--font-heading, "Barlow Condensed", "Helvetica", sans-serif);
+}
+
+tt,
+code,
+kbd,
+pre,
+samp {
+  font-family: "Menlo", "Courier", "Courier New", "Andale Mono", monospace;
+  font-family: var(
+    --font-monospace,
+    "Menlo",
+    "Courier",
+    "Courier New",
+    "Andale Mono",
+    monospace
+  );
+}

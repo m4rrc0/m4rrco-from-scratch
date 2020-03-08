@@ -1,0 +1,268 @@
+:root {
+  --measure-max: none;
+  --measure-large: none;
+  --measure-text: 65ch;
+  --measure-aside: 65ch;
+  --measure-small: none;
+
+  --size-base-px: 16; /* unitless px value (if necessary) */
+  --size-base: calc(var(--size-base-px) / 16); /* unitless rem value */
+  /* --size-max-px: 100; */
+  /* --size-scale-steps: 12; */
+  --size-scale-ratio: 1.165; /* can be computed by (maxSize / baseSize) ** (1 / steps) */
+
+  --s-12: calc(var(--s-11) / var(--size-scale-ratio));
+  --s-11: calc(var(--s-10) / var(--size-scale-ratio));
+  --s-10: calc(var(--s-9) / var(--size-scale-ratio));
+  --s-9: calc(var(--s-8) / var(--size-scale-ratio));
+  --s-8: calc(var(--s-7) / var(--size-scale-ratio));
+  --s-7: calc(var(--s-6) / var(--size-scale-ratio));
+  --s-6: calc(var(--s-5) / var(--size-scale-ratio));
+  --s-5: calc(var(--s-4) / var(--size-scale-ratio));
+  --s-4: calc(var(--s-3) / var(--size-scale-ratio));
+  --s-3: calc(var(--s-2) / var(--size-scale-ratio));
+  --s-2: calc(var(--s-1) / var(--size-scale-ratio));
+  --s-1: var(--s0);
+  --s0: calc(var(--size-base));
+  --s1: var(--s0);
+  --s2: calc(var(--s1) * var(--size-scale-ratio));
+  --s3: calc(var(--s2) * var(--size-scale-ratio));
+  --s4: calc(var(--s3) * var(--size-scale-ratio));
+  --s5: calc(var(--s4) * var(--size-scale-ratio));
+  --s6: calc(var(--s5) * var(--size-scale-ratio));
+  --s7: calc(var(--s6) * var(--size-scale-ratio));
+  --s8: calc(var(--s7) * var(--size-scale-ratio));
+  --s9: calc(var(--s8) * var(--size-scale-ratio));
+  --s10: calc(var(--s9) * var(--size-scale-ratio));
+  --s11: calc(var(--s10) * var(--size-scale-ratio));
+  --s12: calc(var(--s11) * var(--size-scale-ratio));
+
+  --size-lock-screen-min: 20;
+  --size-lock-screen-max: 88;
+  /* --fluid-min-screen-px: 400;
+    --fluid-min-screen: calc(var(--fluid-min-screen-px) / var(--size-base-px));
+    --fluid-max-screen-px: 600;
+    --fluid-max-screen: calc(var(--fluid-max-screen-px) / (var(--size-base-max) * var(--size-base-px))); */
+  /* TODO: does not work */
+
+  --size-lock-min: var(--s0);
+  --size-lock-max: var(--s3);
+}
+
+.size-context-main,
+body {
+  --gap-out: 1rem;
+  --gap-in: 1rem;
+
+  --size-h1-min: var(--s4);
+  --size-h1-max: var(--s12);
+  --size-h2-min: var(--s3);
+  --size-h2-max: var(--s8);
+  --size-h3-min: var(--s2);
+  --size-h3-max: var(--s4);
+  --size-h4-min: var(--s1);
+  --size-h4-max: var(--s2);
+  --size-h5-min: var(--s-2);
+  --size-h5-max: var(--s1);
+  --size-h6-min: var(--s-3);
+  --size-h6-max: var(--s-2);
+  --size-h7-min: var(--s-4);
+  --size-h7-max: var(--s-3);
+  --size-h8-min: var(--s-5);
+  --size-h8-max: var(--s-4);
+}
+
+.size-context-aside {
+  --gap-xl: var(--size-h5);
+}
+
+* {
+  /* With formula... do we need media queries??? */
+  --lock: calc(
+    (var(--size-lock-min) * 1rem) +
+      (var(--size-lock-max) - var(--size-lock-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-font: var(--lock);
+
+  /* Combination with the formula to avoid media queries */
+  --size-font: min(
+    max((var(--size-lock-min) * 1rem), var(--lock)),
+    (var(--size-lock-max)) * 1rem
+  );
+  /* TODO: I am not sure I want to block the size because of TVs and other very large screens */
+  /* The short solution lacks control and browser support */
+  /* https://caniuse.com/#feat=css-math-functions */
+  /* See https://css-tricks.com/simplified-fluid-typography/ */
+  /* font-size: min(max(16px, 2.2vw), 22px);
+    font-size: clamp(16px, 2.2vw, 22px); */
+
+  --lock-h1: calc(
+    (var(--size-h1-min) * 1rem) + (var(--size-h1-max) - var(--size-h1-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h1: var(--lock-h1);
+  --size-h1: min(
+    max((var(--size-h1-min) * 1rem), var(--lock-h1)),
+    (var(--size-h1-max)) * 1rem
+  );
+
+  --lock-h2: calc(
+    (var(--size-h2-min) * 1rem) + (var(--size-h2-max) - var(--size-h2-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h2: var(--lock-h2);
+  --size-h2: min(
+    max((var(--size-h2-min) * 1rem), var(--lock-h2)),
+    (var(--size-h2-max)) * 1rem
+  );
+
+  --lock-h3: calc(
+    (var(--size-h3-min) * 1rem) + (var(--size-h3-max) - var(--size-h3-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h3: var(--lock-h3);
+  --size-h3: min(
+    max((var(--size-h3-min) * 1rem), var(--lock-h3)),
+    (var(--size-h3-max)) * 1rem
+  );
+
+  --lock-h4: calc(
+    (var(--size-h4-min) * 1rem) + (var(--size-h4-max) - var(--size-h4-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h4: var(--lock-h4);
+  --size-h4: min(
+    max((var(--size-h4-min) * 1rem), var(--lock-h4)),
+    (var(--size-h4-max)) * 1rem
+  );
+
+  --lock-h5: calc(
+    (var(--size-h5-min) * 1rem) + (var(--size-h5-max) - var(--size-h5-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h5: var(--lock-h5);
+  --size-h5: min(
+    max((var(--size-h5-min) * 1rem), var(--lock-h5)),
+    (var(--size-h5-max)) * 1rem
+  );
+
+  --lock-h6: calc(
+    (var(--size-h6-min) * 1rem) + (var(--size-h6-max) - var(--size-h6-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h6: var(--lock-h6);
+  --size-h6: min(
+    max((var(--size-h6-min) * 1rem), var(--lock-h6)),
+    (var(--size-h6-max)) * 1rem
+  );
+
+  --lock-h7: calc(
+    (var(--size-h7-min) * 1rem) + (var(--size-h7-max) - var(--size-h7-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h7: var(--lock-h7);
+  --size-h7: min(
+    max((var(--size-h7-min) * 1rem), var(--lock-h7)),
+    (var(--size-h7-max)) * 1rem
+  );
+
+  --lock-h8: calc(
+    (var(--size-h8-min) * 1rem) + (var(--size-h8-max) - var(--size-h8-min)) *
+      (100vw - (var(--size-lock-screen-min) * 1rem)) /
+      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  );
+  --size-h8: var(--lock-h8);
+  --size-h8: min(
+    max((var(--size-h8-min) * 1rem), var(--lock-h8)),
+    (var(--size-h8-max)) * 1rem
+  );
+
+  --gap-xxs: var(--size-h8);
+  --gap-xs: var(--size-h6);
+  --gap-s: var(--size-h5);
+  --gap-m: var(--size-h4);
+  --gap-l: var(--size-h3);
+  --gap-xl: var(--size-h2);
+  --gap-xxl: var(--size-h1);
+
+  --gap: var(--gap-m);
+  /* useful vars for layout primitives */
+  --gutters: var(--gap-m);
+  --space: var(--gap-m);
+  --padding: var(--gap-m);
+  --width-border: var(--gap-xxs);
+  --width-max: var(--gap-xxs);
+  --width-min: var(--gap-xxs);
+  --width-item: var(--gap-xxs);
+  --width-side: var(--gap-xxs);
+  --width-main-min: var(--gap-xxs);
+  --height: var(--gap-xxs);
+  --threshold: var(--gap-xxs);
+}
+
+* {
+  line-height: 1;
+}
+
+*,
+.size-h4,
+.h4,
+.size-p,
+.p {
+  font-size: 1rem;
+  font-size: var(--size-h4, 1rem);
+}
+
+h1,
+h1 *,
+.size-h1,
+.h1 {
+  font-size: 2rem;
+  font-size: var(--size-h1, 2rem);
+}
+
+h2,
+h2 *,
+.size-h2,
+.h2 {
+  font-size: 1.8rem;
+  font-size: var(--size-h2, 1.8rem);
+}
+
+h3,
+h3 *,
+.size-h3,
+.h3 {
+  font-size: 1.5rem;
+  font-size: var(--size-h3, 1.5rem);
+}
+
+h5,
+h5 *,
+.size-h5,
+.h5 {
+  font-size: 0.9rem;
+  font-size: var(--size-h5, 0.9rem);
+}
+
+h6,
+h6 *,
+.size-h6,
+.h6 {
+  font-size: 0.8rem;
+  font-size: var(--size-h6, 0.8rem);
+}
+
+* {
+  margin-bottom: 0;
+  margin-top: 0;
+}
