@@ -67,3 +67,9 @@ select {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- CUSTOM ---------- */
+/* hr should be visible */
+hr {
+  width: 100%;
+}

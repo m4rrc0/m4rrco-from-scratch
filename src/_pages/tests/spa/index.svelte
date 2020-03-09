@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from "svelte";
+
   // import { Router, Link, Route } from "../svelte-routing";
   import Router from "../../../svelte-routing/Router";
   import Link from "../../../svelte-routing/Link";
@@ -7,6 +9,18 @@
   import Template from "../../../templates/index";
 
   export let url = "";
+
+  let disabled = true;
+  onMount(() => {
+    if (typeof window !== "undefined") {
+      disabled = false;
+    }
+  });
+
+  let counter = 0;
+  const increment = () => {
+    counter += 1;
+  };
 </script>
 
 <Template>
@@ -23,5 +37,9 @@
         <Spa text="SPA: Page one" />
       </Route>
     </div>
+    <h2>A counter for good measure</h2>
+    <button on:click={increment} {disabled}>
+      This button has been clicked {counter} time{counter > 1 ? `s` : ''}
+    </button>
   </Router>
 </Template>

@@ -8,8 +8,8 @@
 
 <div class="js-test-block" style={`color:${color}`}>
   <p>
-    This website is built using svelte and svelvet. Static HTML files are
-    hydrated with standard JS esm modules.
+    This website is built using svelte and inspired by svelvet. Static HTML
+    files are hydrated with standard JS esm modules.
     <br />
     The button below allows me to test if JS is loaded properly. ;)
   </p>

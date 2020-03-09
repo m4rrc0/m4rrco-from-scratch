@@ -1,3 +1,11 @@
+/* 1. ------------------------------------
+set global vars on :root */
+/*
+measure = intrinsic widths sizes
+s... = scale values determined by size-scale-ratio
+-> can also be computed with a max and min size and steps between
+size-lock... = used for computing css locks for every size we need
+*/
 :root {
   --measure-max: none;
   --measure-large: none;
@@ -49,34 +57,69 @@
   --size-lock-max: var(--s3);
 }
 
+/* 2. ------------------------------------
+We will use "size contexts" to determine the mins and max to use for the computed locks */
+
 .size-context-main,
 body {
-  --gap-out: 1rem;
-  --gap-in: 1rem;
+  --gap-out: 1rem; /* ?? margin of the context itself */
+  --gap-in: 1rem; /* ?? padding of the context itself */
+  --gap-between: 1rem; /* ?? gap between children of the context */
 
+  --size-h1-max: var(--s6);
   --size-h1-min: var(--s4);
+  --size-h2-max: var(--s4);
+  --size-h2-min: var(--s2);
+  --size-h3-max: var(--s2);
+  --size-h3-min: var(--s1);
+  --size-h4-max: var(--s1);
+  --size-h4-min: var(--s0);
+  --size-h5-max: var(--s0);
+  --size-h5-min: var(--s-1);
+  --size-h6-max: var(--s-1);
+  --size-h6-min: var(--s-4);
+  --size-h7-max: var(--s-4);
+  --size-h7-min: var(--s-8);
+  --size-h8-max: var(--s-8);
+  --size-h8-min: var(--s-12);
+}
+
+.size-context-massive {
   --size-h1-max: var(--s12);
-  --size-h2-min: var(--s3);
+  --size-h1-min: var(--s4);
   --size-h2-max: var(--s8);
-  --size-h3-min: var(--s2);
+  --size-h2-min: var(--s3);
   --size-h3-max: var(--s4);
-  --size-h4-min: var(--s1);
+  --size-h3-min: var(--s2);
   --size-h4-max: var(--s2);
-  --size-h5-min: var(--s-2);
+  --size-h4-min: var(--s1);
   --size-h5-max: var(--s1);
-  --size-h6-min: var(--s-3);
+  --size-h5-min: var(--s-2);
   --size-h6-max: var(--s-2);
-  --size-h7-min: var(--s-4);
+  --size-h6-min: var(--s-3);
   --size-h7-max: var(--s-3);
-  --size-h8-min: var(--s-5);
+  --size-h7-min: var(--s-4);
   --size-h8-max: var(--s-4);
+  --size-h8-min: var(--s-5);
 }
 
 .size-context-aside {
   --gap-xl: var(--size-h5);
 }
 
-* {
+/* 3. ------------------------------------
+Whatever the context we are in, we then need to compute the css locks for every necessary sizes */
+/*
+the lock is the fluid value
+the size-... is the fluid value bound within a min and max IF the browser supports min/max css functions ELSE it will just be the fluid value
+*/
+
+/* * { */
+/* :root { */
+/* .size-context-main,
+body { */
+body,
+*[class*="size-context-"] {
   /* With formula... do we need media queries??? */
   --lock: calc(
     (var(--size-lock-min) * 1rem) +
@@ -185,6 +228,14 @@ body {
     max((var(--size-h8-min) * 1rem), var(--lock-h8)),
     (var(--size-h8-max)) * 1rem
   );
+}
+
+/* 4. ------------------------------------
+  Assign the appropriate size to reusable vars for margins, paddings, ... */
+/* TODO: what vars do we need throughout the app? Isn't --size-h1 -> --size-h8 enough and more declarative? */
+.size-context-main,
+body {
+  --gap-relative: 0.618em;
 
   --gap-xxs: var(--size-h8);
   --gap-xs: var(--size-h6);
@@ -207,11 +258,12 @@ body {
   --width-main-min: var(--gap-xxs);
   --height: var(--gap-xxs);
   --threshold: var(--gap-xxs);
+
+  --measure: var(--measure-text);
 }
 
-* {
-  line-height: 1;
-}
+/* 5. ------------------------------------
+utility classes to make it easier to apply font-sizes or other dimensions inside a size context */
 
 *,
 .size-h4,
@@ -262,7 +314,8 @@ h6 *,
   font-size: var(--size-h6, 0.8rem);
 }
 
-* {
-  margin-bottom: 0;
-  margin-top: 0;
+:root {
+  line-height: 1.4;
+  /* margin-bottom: 0; */
+  /* margin-top: 0; */
 }

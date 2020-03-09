@@ -3,11 +3,13 @@
 </script>
 
 <Template>
-  <div>
+  <div class="stack size-context-massive">
     <h1>Hey, I'm m4rrc0</h1>
     <p>This is my contribution to the web. Impressive, right?!</p>
     <p>
-      As you can see there is not much here yet but here is a story for you:
+      As you can see there is not much here yet because the goal is to build and
+      <a href="https://www.swyx.io/writing/learn-in-public/">learn in public</a>
+      .
     </p>
     <p>
       I have been teaching myself web development for approximately 5 years now.
@@ -19,8 +21,9 @@
     </p>
     <p>
       These wanderings lead me to a lot of reflexion about what I'll call the
-      'personal web'. A place on the web for you, that belongs to you and that
-      you can control entirely even if you are not a techie.
+      <em>personal web.</em>
+      A place on the web for you, that belongs to you and that you can control
+      entirely even if you are not a techie.
     </p>
     <p>
       This comes with a lot of challenges but I believe we have everything we
@@ -35,7 +38,7 @@
       web and connect with others.
     </p>
 
-    <br />
+    <hr />
 
     <p>
       The goal of this website is to build my personal space and to be the
@@ -49,3 +52,9 @@
     <p>Feedbacks are greatly appreciated.</p>
   </div>
 </Template>
+
+<style>
+  .stack {
+    --gap: var(--gap-relative, --gap);
+  }
+</style>

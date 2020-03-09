@@ -3,5 +3,13 @@
 </script>
 
 <Template>
-  <slot />
+  <div class="stack">
+    <slot />
+  </div>
 </Template>
+
+<style>
+  .stack {
+    --gap: 1em;
+  }
+</style>

@@ -105,30 +105,32 @@ async function compileHtml(pageDef /*, options */) {
     console.error(`unable to create HTML for page ${name}`, pageDef);
     return;
   }
-  // TODO: Exclude processing if this is not a page
+  // TODO: don't load JS if it is an individual page (not SPA) and there are no side effects in this page
+  // IDEA: check the content of the JS output of Comp.render to see if there are dom events or onMount svelte method or things like that
 
-  // const buildPath = `${destPath}`.replace(/^dist\//, 'build/')
-  // const pagePath = `${destPath}`.replace(/.js$/, '.html')
-
-  // const srcPathSplit = destPath.split('/')
-  // const fileName = srcPathSplit[srcPathSplit.length - 1]
-
-  // console.log({ p, name, component, props })
-
-  const buildPath = `build/${component}`.replace(/^dist\//, "build/");
-  let pagePath = /index$/.test(p) ? p : `${p}/index`;
-  pagePath = `dist${pagePath}.html`.replace(/\/+/, "/"); // avoir double slashes in case path is '/' for example
-  // const pagePath = p === '/' ? 'dist/index.html' : `dist${p}/index.html`
+  // buildPath is the js file that has been compiled for ssr
+  // const buildPath = `build/${component}`.replace(/^dist\//, "build/");
+  const buildPath = `build/${component}`;
+  let pagePath = /index$/.test(p) ? p : `${p}/index`; // all pages are 'index.html' inside the appropriate folder
+  pagePath = `dist${pagePath}.html`.replace(/\/+/, "/"); // avoid double slashes in case path is '/' for example
   const importPath = /.js$/.test(component) ? component : `${component}.js`;
 
+  // const source = await fs.readFile(buildPath, "utf8");
   try {
-    // buildPath is the js file compile for ssr
+    const clientComp = require(path.join(process.cwd(), `dist/${component}`))
+      .default;
+    console.log(
+      new clientComp({
+        target: document.querySelector("#app"),
+        hydrate: true,
+        props: props && JSON.stringify(props)
+      })
+    );
     const Comp = require(path.join(process.cwd(), buildPath)).default;
 
     const { head, html, css } = Comp.render({
       ...props
     });
-    console.log({ p, pagePath, importPath });
 
     await fs.mkdir(path.dirname(pagePath), { recursive: true });
     await fs.writeFile(

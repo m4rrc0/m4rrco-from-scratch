@@ -4,13 +4,15 @@
 </script>
 
 <Template>
-  <h1>Things I am experimenting with</h1>
+  <div>
+    <h1>Things I am experimenting with</h1>
 
-  <ul>
-    <li>
-      <a href="/tests/spa/">SPA mode for this static site builder</a>
-    </li>
-  </ul>
+    <ul>
+      <li>
+        <a href="/tests/spa/">SPA mode for this static site builder</a>
+      </li>
+    </ul>
 
-  <JsColorTest />
+    <JsColorTest />
+  </div>
 </Template>

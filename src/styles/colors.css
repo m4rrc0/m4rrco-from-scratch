@@ -25,6 +25,9 @@ body,
   --color-button-bg: var(--color-bg);
   --color-button_hover-text: var(--color-secondary);
   --color-button_hover-bg: var(--color-bg);
+  /* TODO */
+  /* --color-button_disabled-text: var(--color-secondary);
+  --color-button_disabled-bg: var(--color-bg); */
 
   /* Let's assign variables to every possible css color property */
   /* ATTENTION: this is also the defaults in case custom properties are not supported */
@@ -87,6 +90,16 @@ button[class*="color-palette-"]:hover,
   background-color: transparent;
   background-color: var(--color-button_hover-bg, transparent);
   border-color: var(--color-button_hover-border, currentcolor);
+}
+
+button:disabled,
+button[class*="color-palette-"]:disabled,
+*[class*="color-palette-"] button:disabled {
+  color: #999;
+  color: var(--color-button_disabled-text, #999);
+  background-color: #eee;
+  background-color: var(--color-button_disabled-bg, #eee);
+  border-color: var(--color-button_disabled-border, currentcolor);
 }
 
 /* End of variables assignation and default values */

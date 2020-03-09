@@ -1,0 +1,5 @@
+#app {
+  margin: auto;
+  padding: var(--gap);
+  max-width: var(--measure);
+}

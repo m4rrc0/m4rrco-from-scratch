@@ -1,1 +1,49 @@
-
+/* -------- STACK ------------ */
+/*
+gap: var dimension
+recursive: class bool
+split-after: class + var bool + int
+(impossible without JS) split-type: var <element> // To avoid ":nth-child" and be able to use ":nth-of-type" // Triggered with .split-after class
+horizontal: class bool
+*/
+.stack {
+  /* --gap: 0.618em; */
+  /* --gap: var(--gap-relative, 0.618em); */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.stack:not(.horizontal) > *,
+.stack.recursive:not(.horizontal) * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.stack:not(.horizontal) > * + *,
+.stack.recursive:not(.horizontal) * + * {
+  margin-top: var(--gap);
+}
+/* horizontal mod */
+.stack.horizontal {
+  flex-direction: row;
+}
+.stack.horizontal > *,
+.stack.horizontal.recursive * {
+  margin-left: 0;
+  margin-right: 0;
+}
+.stack.horizontal > * + *,
+.stack.horizontal.recursive * + * {
+  margin-left: var(--gap);
+}
+/* split-after */
+.stack[class^="split-after"]:only-child,
+.stack.split:only-child {
+  height: 100%;
+}
+/* NOTE: could be better to just set margin-bottom: auto; inline on the element */
+.stack.split-after-1:not(.horizontal) > :nth-child(1) {
+  margin-bottom: auto;
+}
+.stack.horizontal.split-after-1 > :nth-child(1) {
+  margin-right: auto;
+}
