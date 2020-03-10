@@ -1,5 +1,5 @@
 <script>
-  import Template from "../templates/index";
+  import Template from '../templates/index'
 </script>
 
 <Template>
@@ -7,7 +7,8 @@
     <h1>Hey, I'm m4rrc0</h1>
     <p>This is my contribution to the web. Impressive, right?!</p>
     <p>
-      As you can see there is not much here yet because the goal is to build and
+      As you can see there is not much here yet but the goal is to build and
+      <!-- prettier-ignore -->
       <a href="https://www.swyx.io/writing/learn-in-public/">learn in public</a>
       .
     </p>
@@ -23,16 +24,15 @@
       These wanderings lead me to a lot of reflexion about what I'll call the
       <em>personal web.</em>
       A place on the web for you, that belongs to you and that you can control
-      entirely even if you are not a techie.
+      as much as you can (even if you are not a techie).
     </p>
     <p>
       This comes with a lot of challenges but I believe we have everything we
-      need to make it happen. Sure, new protocols and big complicated tech could
+      need to make it happen. Sure, new protocols and complicated tech could
       probably help but I will leave that to smarter people. In the meantime I
-      truly believe that a more open web is just a splat of motivation away.
+      truly believe that a more open web is just a burst of motivation away.
     </p>
     <p>
-      Let's find some decent defaults and a way to customize everything techie.
       Let's use some comon sense low-tech stack. And let's start a small
       revolution where anyone can just easily creates its personal space on the
       web and connect with others.
@@ -50,6 +50,7 @@
       will benefit everyone (including me).
     </p>
     <p>Feedbacks are greatly appreciated.</p>
+    <p>Take care.</p>
   </div>
 </Template>
 

@@ -1,5 +1,13 @@
 #app {
   margin: auto;
-  padding: var(--gap);
+  padding: 0 var(--gap);
   max-width: var(--measure);
+}
+
+blockquote {
+  border-left: var(--size-border-l, 0.4rem) solid;
+  margin-left: 0;
+  padding-left: var(--gap, 1.25rem);
+  font-style: italic;
+  /* font-size: var(--size-); */
 }

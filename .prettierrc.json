@@ -1,0 +1,9 @@
+{
+  "tabWidth": 2,
+  "semi": false,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "htmlWhitespaceSensitivity": "css",
+  "svelteSortOrder": "scripts-markup-styles",
+  "plugins": ["prettier-plugin-svelte"]
+}
