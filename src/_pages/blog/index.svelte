@@ -1,6 +1,17 @@
 <script>
-  import Template from "../../templates/index";
+  import SEO from '../../templates/SEO';
+  import Template from '../../templates/index';
 </script>
+
+<SEO
+  lang="en"
+  ogType="website"
+  siteName="m4rr.co"
+  title="Blog"
+  description="A blog about front-end web development, internet, systems,
+  learning, personal organization, productivity, travel, parenting, cardistry,
+  hypnosis, ... and probably many other known and uncovered interests of mine"
+  canonicalUrl="https://www.m4rr.co/blog/" />
 
 <Template>
   <div>

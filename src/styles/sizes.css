@@ -129,105 +129,105 @@ body,
   );
   --size-font: var(--lock);
 
-  /* Combination with the formula to avoid media queries */
-  --size-font: min(
-    max((var(--size-lock-min) * 1rem), var(--lock)),
-    (var(--size-lock-max)) * 1rem
-  );
-  /* TODO: I am not sure I want to block the size because of TVs and other very large screens */
-  /* The short solution lacks control and browser support */
-  /* https://caniuse.com/#feat=css-math-functions */
-  /* See https://css-tricks.com/simplified-fluid-typography/ */
-  /* font-size: min(max(16px, 2.2vw), 22px);
-    font-size: clamp(16px, 2.2vw, 22px); */
-
   --lock-h1: calc(
     (var(--size-h1-min) * 1rem) + (var(--size-h1-max) - var(--size-h1-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h1: var(--lock-h1);
-  --size-h1: min(
-    max((var(--size-h1-min) * 1rem), var(--lock-h1)),
-    (var(--size-h1-max)) * 1rem
-  );
-
   --lock-h2: calc(
     (var(--size-h2-min) * 1rem) + (var(--size-h2-max) - var(--size-h2-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h2: var(--lock-h2);
-  --size-h2: min(
-    max((var(--size-h2-min) * 1rem), var(--lock-h2)),
-    (var(--size-h2-max)) * 1rem
-  );
-
   --lock-h3: calc(
     (var(--size-h3-min) * 1rem) + (var(--size-h3-max) - var(--size-h3-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h3: var(--lock-h3);
-  --size-h3: min(
-    max((var(--size-h3-min) * 1rem), var(--lock-h3)),
-    (var(--size-h3-max)) * 1rem
-  );
-
   --lock-h4: calc(
     (var(--size-h4-min) * 1rem) + (var(--size-h4-max) - var(--size-h4-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h4: var(--lock-h4);
-  --size-h4: min(
-    max((var(--size-h4-min) * 1rem), var(--lock-h4)),
-    (var(--size-h4-max)) * 1rem
-  );
-
   --lock-h5: calc(
     (var(--size-h5-min) * 1rem) + (var(--size-h5-max) - var(--size-h5-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h5: var(--lock-h5);
-  --size-h5: min(
-    max((var(--size-h5-min) * 1rem), var(--lock-h5)),
-    (var(--size-h5-max)) * 1rem
-  );
-
   --lock-h6: calc(
     (var(--size-h6-min) * 1rem) + (var(--size-h6-max) - var(--size-h6-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h6: var(--lock-h6);
-  --size-h6: min(
-    max((var(--size-h6-min) * 1rem), var(--lock-h6)),
-    (var(--size-h6-max)) * 1rem
-  );
-
   --lock-h7: calc(
     (var(--size-h7-min) * 1rem) + (var(--size-h7-max) - var(--size-h7-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-h7: var(--lock-h7);
-  --size-h7: min(
-    max((var(--size-h7-min) * 1rem), var(--lock-h7)),
-    (var(--size-h7-max)) * 1rem
-  );
-
   --lock-h8: calc(
     (var(--size-h8-min) * 1rem) + (var(--size-h8-max) - var(--size-h8-min)) *
       (100vw - (var(--size-lock-screen-min) * 1rem)) /
       (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
+
+  --size-h1: var(--lock-h1);
+  --size-h2: var(--lock-h2);
+  --size-h3: var(--lock-h3);
+  --size-h4: var(--lock-h4);
+  --size-h5: var(--lock-h5);
+  --size-h6: var(--lock-h6);
+  --size-h7: var(--lock-h7);
   --size-h8: var(--lock-h8);
-  --size-h8: min(
-    max((var(--size-h8-min) * 1rem), var(--lock-h8)),
-    (var(--size-h8-max)) * 1rem
-  );
+}
+@supports (font-size: min(max(16px, 2.2vw), 22px)) {
+  body,
+  *[class*='size-context-'] {
+    /* Combination with the formula to avoid media queries */
+    /* NOTE: Have to use @support because for some reason firefox is not skipping the rule */
+    --size-font: min(
+      max((var(--size-lock-min) * 1rem), var(--lock)),
+      (var(--size-lock-max)) * 1rem
+    );
+    /* TODO: I am not sure I want to block the size because of TVs and other very large screens */
+    /* The short solution lacks control and browser support */
+    /* https://caniuse.com/#feat=css-math-functions */
+    /* See https://css-tricks.com/simplified-fluid-typography/ */
+    /* font-size: min(max(16px, 2.2vw), 22px);
+      font-size: clamp(16px, 2.2vw, 22px); */
+
+    --size-h1: min(
+      max((var(--size-h1-min) * 1rem), var(--lock-h1)),
+      (var(--size-h1-max)) * 1rem
+    );
+    --size-h2: min(
+      max((var(--size-h2-min) * 1rem), var(--lock-h2)),
+      (var(--size-h2-max)) * 1rem
+    );
+    --size-h3: min(
+      max((var(--size-h3-min) * 1rem), var(--lock-h3)),
+      (var(--size-h3-max)) * 1rem
+    );
+    --size-h4: min(
+      max((var(--size-h4-min) * 1rem), var(--lock-h4)),
+      (var(--size-h4-max)) * 1rem
+    );
+    --size-h5: min(
+      max((var(--size-h5-min) * 1rem), var(--lock-h5)),
+      (var(--size-h5-max)) * 1rem
+    );
+    --size-h6: min(
+      max((var(--size-h6-min) * 1rem), var(--lock-h6)),
+      (var(--size-h6-max)) * 1rem
+    );
+    --size-h7: min(
+      max((var(--size-h7-min) * 1rem), var(--lock-h7)),
+      (var(--size-h7-max)) * 1rem
+    );
+    --size-h8: min(
+      max((var(--size-h8-min) * 1rem), var(--lock-h8)),
+      (var(--size-h8-max)) * 1rem
+    );
+  }
 }
 
 /* 4. ------------------------------------

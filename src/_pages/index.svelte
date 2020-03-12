@@ -1,6 +1,16 @@
 <script>
-  import Template from '../templates/index'
+  import SEO from '../templates/SEO';
+  import Template from '../templates/index';
 </script>
+
+<SEO
+  lang="en"
+  ogType="website"
+  siteName=""
+  title="Personal web space of m4rrc0"
+  description="One perspective about the web and a workshop place to experiment
+  with tooling to allow anyone to express its own"
+  canonicalUrl="https://www.m4rr.co/" />
 
 <Template>
   <div class="stack size-context-massive">
@@ -56,6 +66,6 @@
 
 <style>
   .stack {
-    --gap: var(--gap-relative, --gap);
+    --gap: var(--gap-relative);
   }
 </style>

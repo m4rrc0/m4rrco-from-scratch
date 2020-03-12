@@ -1,22 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Literata:ital,wght@0,400..700;1,400..700&display=swap');
+
 :root {
   /* FONTS */
   /* --font-body: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   --font-heading: "Barlow Condensed", "Helvetica", sans-serif;
   --font-monospace: "Menlo", "Courier", "Courier New", "Andale Mono", monospace; */
-  --font-body: sans-serif;
-  --font-heading: sans-serif;
-  --font-monospace: monospace;
+  --font-body: 'Literata', serif;
+  --font-heading: 'Josefin Sans', sans-serif;
+  --font-monospace: 'Fira Code', monospace;
 }
 
 * {
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  font-family: var(
-    --font-body,
-    'Helvetica Neue',
-    'Helvetica',
-    'Arial',
-    sans-serif
-  );
+  font-family: 'Literata', serif;
+  font-family: var(--font-body, 'Literata', serif);
+  /* font-weight: 400;
+  font-variation-settings: "wght" 450 */
 }
 
 h1,
@@ -31,8 +29,8 @@ h5,
 h5 *,
 h6,
 h6 * {
-  font-family: 'Barlow Condensed', 'Helvetica', sans-serif;
-  font-family: var(--font-heading, 'Barlow Condensed', 'Helvetica', sans-serif);
+  font-family: 'Josefin Sans', sans-serif;
+  font-family: var(--font-heading, 'Josefin Sans', sans-serif);
 }
 
 tt,
@@ -40,13 +38,6 @@ code,
 kbd,
 pre,
 samp {
-  font-family: 'Menlo', 'Courier', 'Courier New', 'Andale Mono', monospace;
-  font-family: var(
-    --font-monospace,
-    'Menlo',
-    'Courier',
-    'Courier New',
-    'Andale Mono',
-    monospace
-  );
+  font-family: 'Fira Code', monospace;
+  font-family: var(--font-monospace, 'Fira Code', monospace);
 }

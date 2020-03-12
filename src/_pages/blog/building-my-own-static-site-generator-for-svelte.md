@@ -1,8 +1,21 @@
 ---
 layout: ../../templates/blog.js
+
+title: 'Building my own static site generator for Svelte'
+slug: 'building-my-own-static-site-generator-for-svelte'
 ---
 
-# Building my own static site generator for Svelte
+```js exec
+import SEO from '../../templates/SEO';
+```
+
+```css style
+p:last-of-type {
+  display: none;
+}
+```
+
+# { \_metadata.title }
 
 I have been using GatsbyJS since early V2 Alpha. At the time [Jamstack](https://jamstack.org/) was barely a thing but for a newbie (like me at the time) coming into web development and interested in performance and developer experience it was a golden gate wide open and full of fun promises.
 
@@ -124,6 +137,18 @@ If you are curious, please test it out but don't expect any kind of support unti
 Get in touch on [Twitter](https://twitter.com/M4rrc0)<br/>
 Subscribe to the [newsletter](https://www.m4rr.co/subscribe/)<br/>
 Support my work on [Patreon](https://www.patreon.com/m4rrco/)
+
+<SEO
+    lang="en"
+    ogType="article"
+    siteName="m4rr.co"
+    title="{_metadata.title}"
+    description="A self-criticism about my development practices and early vision for my static site generator using SvelteJS"
+    canonicalUrl="https://www.m4rr.co/blog/building-my-own-static-site-generator-for-svelte/" />
+
+<!-- <meta property='article:author' content='https://www.facebook.com/YOUR-NAME' />
+<meta property='article:publisher' content='https://www.facebook.com/YOUR-PAGE' />
+<meta property='og:site_name' content='YOUR-SITE-NAME' /> -->
 
 <!--
 ## Conclusion

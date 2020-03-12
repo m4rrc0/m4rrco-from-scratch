@@ -1,0 +1,24 @@
+- ~~basic ssg using svelte/svelvet~~
+- ~~HTML pages and JS hydration~~
+- ~~generate pages from file structure or programmatically~~
+- ~~SPA or individual page modes coexist~~
+- ~~SEO (basic first)~~ (only lacking favicon and social image)
+- logo and favicon
+- Style guide (to test libraries)
+- using images
+- breadcrumbs
+- design the site with _nuds_ (website design tooling that will be the subject of other articles)
+- footer
+- sitemap
+- RSS feed
+- looking at integrating IndieWeb functionalities
+- looking at Progressive Web App creation
+- look into adding more preprocessors like sass, postCSS, ...
+- check how to safely remove CSS from JS components created with svelte (should be safe when an HTML page is created but not if it is a client-only route in SPA mode)
+- look at optimizing Netlify builds time
+- avoid fetching dependencies
+- be able to not load JS at all if we only want HTML and/or our page does not generate any side effect anyway
+- better handle external libraries
+- make hot reloading work properly
+- incremental builds would be nice
+- advanced SEO (semantic web)

@@ -1,6 +1,16 @@
 <script>
-  import Template from '../templates/index'
+  import Template from '../templates/index';
+  import SEO from '../templates/SEO';
 </script>
+
+<SEO
+  lang="en"
+  ogType="website"
+  siteName="m4rr.co"
+  title="Subscribe to the mailing list"
+  description="Sent at an irregular pace whenever I get a chance to write
+  something interesting"
+  canonicalUrl="https://www.m4rr.co/subscribe/" />
 
 <Template>
   <form

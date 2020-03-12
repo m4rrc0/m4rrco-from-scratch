@@ -36,7 +36,7 @@ horizontal: class bool
   margin-left: var(--gap);
 }
 /* split-after */
-.stack[class^="split-after"]:only-child,
+.stack[class^='split-after']:only-child,
 .stack.split:only-child {
   height: 100%;
 }

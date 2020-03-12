@@ -1,8 +1,9 @@
-<svelte:head>
-  <html lang="en" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-</svelte:head>
+<script>
+  import SEO from './SEO';
+</script>
+
+<SEO setViewport charset="utf-8" />
+<!-- favicon="" -->
 
 <nav class="stack horizontal">
   <a href="/">Home</a>
