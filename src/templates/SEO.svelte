@@ -3,7 +3,7 @@
 
   export let setViewport = false;
   export let charset = '';
-  export let lang = '';
+  // export let lang = '';
   export let ogType = '';
   export let siteName = '';
   export let title = '';
@@ -15,9 +15,9 @@
 </script>
 
 <svelte:head>
-  {#if lang}
+  <!-- {#if lang}
     <html {lang} />
-  {/if}
+  {/if} -->
   {#if charset}
     <meta {charset} />
   {/if}
