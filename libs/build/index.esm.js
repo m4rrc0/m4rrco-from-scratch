@@ -135,7 +135,7 @@ async function compileHtml(pageDef /*, options */) {
   </head>
   <body>
     <div id="app">${html}</div>
-    <script type="module">
+    <script type="module" async>
       import Comp from '/${importPath}';
       new Comp({
           target: document.querySelector('#app'),
