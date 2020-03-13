@@ -5,9 +5,13 @@
 <SEO setViewport charset="utf-8">
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com/" /> -->
-  <link rel="preload" href="/templates/index.js" as="script" />
-  <link rel="preload" href="/templates/SEO.js" as="script" />
-  <link rel="preload" href="/web_modules/svelte/internal.js" as="script" />
+  <link rel="preload" href="/templates/index.js" as="script" crossorigin />
+  <link rel="preload" href="/templates/SEO.js" as="script" crossorigin />
+  <link
+    rel="preload"
+    href="/web_modules/svelte/internal.js"
+    as="script"
+    crossorigin />
 </SEO>
 <!-- favicon="" -->
 
