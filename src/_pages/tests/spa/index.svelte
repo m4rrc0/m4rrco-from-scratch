@@ -26,7 +26,7 @@
 
 <Template>
   <Router {url}>
-    <nav>
+    <nav class="nav-spa stack horizontal">
       <Link to="/tests/spa/">SPA index</Link>
       <Link to="/tests/spa/one/">SPA page one</Link>
     </nav>
@@ -44,3 +44,9 @@
     </button>
   </Router>
 </Template>
+
+<style>
+  :global(.nav-spa a) {
+    padding: var(--gap, 1rem) 0;
+  }
+</style>
