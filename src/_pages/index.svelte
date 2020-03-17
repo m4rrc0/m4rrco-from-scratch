@@ -5,6 +5,7 @@
   // import appInfo from '../../data/app-info.json';
 </script>
 
+<!-- no-js -->
 <SEO
   lang="en"
   ogType="website"

@@ -107,7 +107,13 @@ async function startDevServer() {
 }
 
 async function compileHtml(pageDef /*, options */) {
-  const { path: p, name, component, props: propsInit } = pageDef;
+  const {
+    path: p,
+    name,
+    component,
+    props: propsInit,
+    options: { noJS } = {},
+  } = pageDef;
   const props = { url: p, propsInit };
   if (!p || !component) {
     console.error(`unable to create HTML for page ${name}`, pageDef);
@@ -130,6 +136,10 @@ async function compileHtml(pageDef /*, options */) {
       ...props,
     });
 
+    if (/no-js/.test(html)) {
+      console.log(html);
+    }
+
     let outputHtml = `
 <!DOCTYPE html>
   <html lang="en">
@@ -140,14 +150,18 @@ async function compileHtml(pageDef /*, options */) {
   </head>
   <body>
     <div id="app">${html}</div>
-    <script type="module" async>
+    ${
+      !noJS
+        ? `<script type="module" async>
       import Comp from '/${importPath}';
       new Comp({
           target: document.querySelector('#app'),
           hydrate: true,
           props: ${props && JSON.stringify(props)}
       });
-    </script>
+    </script>`
+        : ''
+    }
   </body>
 </html>
     `;
@@ -207,7 +221,7 @@ const makePageDef = destPath => {
     path: p,
     name,
     component,
-    data: {},
+    props: {},
   };
 };
 
@@ -281,7 +295,6 @@ async function compileSass({ entryPath: file, includePaths }) {
           postcss([postcssPresetEnv, autoprefixer, cssnano])
             .process(output, { from: file, to: outputPath })
             .then(postcssed => {
-              console.log(postcssed.css);
               fs.writeFile(outputPath, postcssed.css);
               if (postcssed.map) {
                 fs.writeFile(`${outputPath}.map`, postcssed.map);
