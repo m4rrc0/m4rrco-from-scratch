@@ -5,14 +5,16 @@
 <SEO setViewport charset="utf-8">
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com/" /> -->
-  <link
+
+  <!-- We can do that if we are sure we load JS -->
+  <!-- <link
     rel="preload"
     href="/web_modules/svelte/internal.js"
     as="script"
     crossorigin />
   <link rel="preload" href="/templates/index.js" as="script" crossorigin />
   <link rel="preload" href="/templates/SEO.js" as="script" crossorigin />
-  <link rel="preload" href="/components/Meta.js" as="script" crossorigin />
+  <link rel="preload" href="/components/Meta.js" as="script" crossorigin /> -->
 
   <!-- Seems useless -->
   <!-- <link rel="preload" href="/styles/reset.css" as="style" crossorigin />
