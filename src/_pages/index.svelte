@@ -1,6 +1,8 @@
 <script>
   import SEO from '../templates/SEO';
   import Template from '../templates/index';
+  // TODO: Should be done at build time only
+  // import appInfo from '../../data/app-info.json';
 </script>
 
 <SEO

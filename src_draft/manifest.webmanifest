@@ -1,0 +1,22 @@
+{
+  "name": "m4rr.co",
+  "short_name": "m4rr.co",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "description": "One perspective about the web and a workshop place to experiment with tooling to allow anyone to express its own",
+  "categories": ["education", "news", "blog"],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
