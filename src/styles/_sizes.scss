@@ -9,7 +9,8 @@ size-lock... = used for computing css locks for every size we need
 :root {
   --measure-max: none;
   --measure-large: none;
-  --measure-text: 65ch;
+  // --measure-text: 65ch;
+  --measure-text: 38rem;
   --measure-aside: 65ch;
   --measure-small: none;
 

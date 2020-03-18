@@ -26,6 +26,8 @@ import {
 } from './svelvet';
 
 const IS_PRODUCTION_MODE = process.env.NODE_ENV === 'production';
+const shouldMinify =
+  IS_PRODUCTION_MODE && !process.argv.includes('--no-minify');
 
 export function startWatchMode() {
   console.info(`\nWatching for files...`);
@@ -147,42 +149,6 @@ async function compileHtml(pageDef /*, options */) {
     ${head}
     <link rel="stylesheet" type="text/css" href="/global.css">
     <style>${css && css.code}</style>
-    <script>
-  if (typeof window !== 'undefined') {
-    import('/web_modules/fontfaceobserver.js').then(({ default: FontFaceObserver }) => {
-      // FontFaceObserver https://github.com/bramstein/fontfaceobserver
-      var fontBodySubset = new FontFaceObserver('LiterataCritical');
-      var fontHeadingSubset = new FontFaceObserver('JosefinSansCritical');
-      var fontMonoSubset = new FontFaceObserver('FiraCodeCritical');
-
-      Promise.all([
-        fontBodySubset.load(),
-        fontHeadingSubset.load(),
-        fontMonoSubset.load(),
-      ]).then(function() {
-        // fontClasses = 'fonts-stage-1';
-        document.documentElement.className += " fonts-stage-1";
-
-        var fontBody = new FontFaceObserver('Literata');
-        var fontHeading = new FontFaceObserver('Josefin Sans');
-        var fontMono = new FontFaceObserver('Fira Code');
-
-        Promise.all([
-          fontBody.load(),
-          fontHeading.load(),
-          fontMono.load(),
-        ]).then(function() {
-          console.log('ALL FONTS LOADED');
-          // fontClasses = 'fonts-stage-1 fonts-stage-2';
-          document.documentElement.className += ' fonts-stage-2';
-
-          // Optimization for Repeat Views
-          // sessionStorage.criticalFoftFontsLoaded = true;
-        });
-      });
-    });
-  }
-</script>
   </head>
   <body>
     <div id="app">${html}</div>
@@ -203,7 +169,7 @@ async function compileHtml(pageDef /*, options */) {
     `;
 
     // Minify HTML files with html-minifier if in production.
-    if (IS_PRODUCTION_MODE && !process.argv.includes('--no-minify')) {
+    if (shouldMinify) {
       outputHtml = await minifyHtml({ html: outputHtml });
     }
 
@@ -307,7 +273,7 @@ async function compileSass({ entryPath: file, includePaths }) {
         file,
         // includePaths: ['lib/', 'mod/'],
         includePaths,
-        outputStyle: 'compressed',
+        outputStyle: shouldMinify ? 'compressed' : 'expanded',
       },
       async function(error, result) {
         // node-style callback from v3.0.0 onwards
@@ -328,7 +294,11 @@ async function compileSass({ entryPath: file, includePaths }) {
           output = result.css.toString();
 
           // await fs.writeFile(outputPath, output);
-          postcss([postcssPresetEnv, autoprefixer, cssnano])
+          postcss([
+            postcssPresetEnv,
+            autoprefixer,
+            ...(shouldMinify ? [cssnano] : []),
+          ])
             .process(output, { from: file, to: outputPath })
             .then(postcssed => {
               fs.writeFile(outputPath, postcssed.css);
@@ -510,7 +480,7 @@ async function initialBuild() {
   );
 
   // Minify js files with terser if in production.
-  if (IS_PRODUCTION_MODE && !process.argv.includes('--no-minify')) {
+  if (shouldMinify) {
     await Promise.all(
       destFiles.map(destPath =>
         concurrencyLimit(async () => {
@@ -521,7 +491,7 @@ async function initialBuild() {
     );
   }
   // Minify HTML files with terser if in production.
-  // if (IS_PRODUCTION_MODE && !process.argv.includes('--no-minify')) {
+  // if (shouldMinify) {
   //   await Promise.all(
   //     [...pages, ...programmaticPages].map(pagePath =>
   //       concurrencyLimit(async () => {

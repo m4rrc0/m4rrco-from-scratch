@@ -1,35 +1,8 @@
-// @import 'styles/fonts-critical';
+@import 'styles/fonts-critical';
 @import 'styles/fonts';
 @import 'styles/reset';
 @import 'styles/sizes';
-// @import 'styles/typography';
+@import 'styles/typography';
 @import 'styles/colors';
 @import 'styles/layout';
 @import 'styles/main';
-
-#template-global {
-  font-family: sans-serif;
-}
-.fonts-stage-1 #template-global {
-  font-family: JosefinSansCritical, sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-.fonts-stage-2 #template-global {
-  font-family: 'Josefin Sans', sans-serif;
-}
-/* .fonts-stage-2 h1,
-    .fonts-stage-2 strong {
-      font-family: LatoBold, sans-serif;
-      font-weight: 700;
-    }
-    .fonts-stage-2 em {
-      font-family: LatoItalic, sans-serif;
-      font-style: italic;
-    }
-    .fonts-stage-2 strong em,
-    .fonts-stage-2 em strong {
-      font-family: LatoBoldItalic, sans-serif;
-      font-weight: 700;
-      font-style: italic;
-    } */

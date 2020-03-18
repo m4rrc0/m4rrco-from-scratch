@@ -9,11 +9,22 @@
   /* --font-body: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   --font-heading: "Barlow Condensed", "Helvetica", sans-serif;
   --font-monospace: "Menlo", "Courier", "Courier New", "Andale Mono", monospace; */
-  --font-body: 'Literata', 'LiterataCritical', serif;
-  --font-heading: 'Josefin Sans', sans-serif;
-  --font-monospace: 'Fira Code', 'FiraCodeCritical', monospace;
+  --font-body: serif;
+  --font-heading: sans-serif;
+  --font-monospace: monospace;
+}
+html {
+  &.fonts-stage-1 {
+    --font-body: 'LiterataCritical', serif;
+    --font-heading: 'JosefinSansCritical', sans-serif;
+    --font-monospace: 'FiraCodeCritical', monospace;
 
-  // font-display: swap;
+    &.fonts-stage-2 {
+      --font-body: 'Literata', 'LiterataCritical', serif;
+      --font-heading: 'Josefin Sans', 'JosefinSansCritical', sans-serif;
+      --font-monospace: 'Fira Code', 'FiraCodeCritical', monospace;
+    }
+  }
 }
 
 * {
@@ -47,3 +58,30 @@ samp {
   font-family: 'Fira Code', monospace;
   font-family: var(--font-monospace, 'Fira Code', monospace);
 }
+
+#template-global {
+  font-family: sans-serif;
+}
+.fonts-stage-1 #template-global {
+  font-family: JosefinSansCritical, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.fonts-stage-2 #template-global {
+  font-family: 'Josefin Sans', sans-serif;
+}
+/* .fonts-stage-2 h1,
+    .fonts-stage-2 strong {
+      font-family: LatoBold, sans-serif;
+      font-weight: 700;
+    }
+    .fonts-stage-2 em {
+      font-family: LatoItalic, sans-serif;
+      font-style: italic;
+    }
+    .fonts-stage-2 strong em,
+    .fonts-stage-2 em strong {
+      font-family: LatoBoldItalic, sans-serif;
+      font-weight: 700;
+      font-style: italic;
+    } */
