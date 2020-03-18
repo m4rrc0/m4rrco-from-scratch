@@ -147,6 +147,42 @@ async function compileHtml(pageDef /*, options */) {
     ${head}
     <link rel="stylesheet" type="text/css" href="/global.css">
     <style>${css && css.code}</style>
+    <script>
+  if (typeof window !== 'undefined') {
+    import('/web_modules/fontfaceobserver.js').then(({ default: FontFaceObserver }) => {
+      // FontFaceObserver https://github.com/bramstein/fontfaceobserver
+      var fontBodySubset = new FontFaceObserver('LiterataCritical');
+      var fontHeadingSubset = new FontFaceObserver('JosefinSansCritical');
+      var fontMonoSubset = new FontFaceObserver('FiraCodeCritical');
+
+      Promise.all([
+        fontBodySubset.load(),
+        fontHeadingSubset.load(),
+        fontMonoSubset.load(),
+      ]).then(function() {
+        // fontClasses = 'fonts-stage-1';
+        document.documentElement.className += " fonts-stage-1";
+
+        var fontBody = new FontFaceObserver('Literata');
+        var fontHeading = new FontFaceObserver('Josefin Sans');
+        var fontMono = new FontFaceObserver('Fira Code');
+
+        Promise.all([
+          fontBody.load(),
+          fontHeading.load(),
+          fontMono.load(),
+        ]).then(function() {
+          console.log('ALL FONTS LOADED');
+          // fontClasses = 'fonts-stage-1 fonts-stage-2';
+          document.documentElement.className += ' fonts-stage-2';
+
+          // Optimization for Repeat Views
+          // sessionStorage.criticalFoftFontsLoaded = true;
+        });
+      });
+    });
+  }
+</script>
   </head>
   <body>
     <div id="app">${html}</div>
