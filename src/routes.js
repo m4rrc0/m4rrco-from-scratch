@@ -16,10 +16,10 @@ export default [
     name: 'SPA: Page index',
     component: '_pages/tests/spa/index',
   },
-  {
-    path: '/',
-    name: 'index',
-    component: '_pages/index',
-    options: { noJS: true },
-  },
+  // {
+  //   path: '/',
+  //   name: 'index',
+  //   component: '_pages/index',
+  //   options: { noJS: true },
+  // },
 ];

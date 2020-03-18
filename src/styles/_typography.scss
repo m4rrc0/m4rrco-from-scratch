@@ -1,19 +1,23 @@
 // @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Literata:ital,wght@0,400..700;1,400..700&display=swap');
+// NOTE: can use 'text' param in url
+// abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !:/;.,?-"'()éèàçêë€
+// URL encoded becomes
+// abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%20%21%3A%2F%3B.%2C%3F-%22%27%28%29%C3%A9%C3%A8%C3%A0%C3%A7%C3%AA%C3%AB%E2%82%AC
 
 :root {
   /* FONTS */
   /* --font-body: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   --font-heading: "Barlow Condensed", "Helvetica", sans-serif;
   --font-monospace: "Menlo", "Courier", "Courier New", "Andale Mono", monospace; */
-  --font-body: 'Literata', serif;
+  --font-body: 'Literata', 'LiterataCritical', serif;
   --font-heading: 'Josefin Sans', sans-serif;
-  --font-monospace: 'Fira Code', monospace;
+  --font-monospace: 'Fira Code', 'FiraCodeCritical', monospace;
 
-  font-display: swap;
+  // font-display: swap;
 }
 
 * {
-  font-family: 'Literata', serif;
+  // font-family: 'Literata', serif;
   font-family: var(--font-body, 'Literata', serif);
   /* font-weight: 400;
   font-variation-settings: "wght" 450 */

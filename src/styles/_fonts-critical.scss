@@ -21,6 +21,13 @@
     U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
     U+FEFF, U+FFFD;
 }
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 300 700;
+  src: url(https://fonts.gstatic.com/l/font?kit=uU9NCBsR6Z2vfE9aq3bR38bWonK0UzM_0NgBGm3gDIej6XhBbt0HgnPsrJvf-K4xUVu5yh83kYRAvNWnyuxq0zk38gLTMaQbeLy9qHJByU7vRMI1wrmkDqfN2iB4wAAEoTE&skey=33bc0af28fd31bc7&v=v8)
+    format('woff2');
+}
 /* latin-ext */
 // @font-face {
 //   font-family: 'Josefin Sans';

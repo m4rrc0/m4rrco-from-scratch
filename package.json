@@ -47,6 +47,7 @@
     "terser": "^4.6.4"
   },
   "dependencies": {
+    "fontfaceobserver": "^2.1.0",
     "page": "^1.11.5"
   }
 }
