@@ -4,7 +4,7 @@
   font-weight: 400;
   font-style: normal;
   /* unicode-range: U+65-U+90, U+97-122; */
-  // font-display: swap;
+  font-display: swap;
 }
 @font-face {
   font-family: JosefinSansCritical;
@@ -12,7 +12,7 @@
   font-weight: 400;
   font-style: normal;
   /* unicode-range: U+65-U+90, U+97-122; */
-  // font-display: swap;
+  font-display: swap;
 }
 @font-face {
   font-family: FiraCodeCritical;
@@ -20,7 +20,7 @@
   font-weight: 400;
   font-style: normal;
   /* unicode-range: U+65-U+90, U+97-122; */
-  // font-display: swap;
+  font-display: swap;
 }
 
 @font-face {
@@ -28,4 +28,5 @@
   font-style: normal;
   font-weight: 400;
   src: url('/assets/fonts/RecursiveCritical.woff2') format('woff2');
+  font-display: swap;
 }
