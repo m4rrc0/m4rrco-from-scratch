@@ -22,3 +22,10 @@
   /* unicode-range: U+65-U+90, U+97-122; */
   // font-display: swap;
 }
+
+@font-face {
+  font-family: 'Recursive';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/RecursiveCritical.woff2') format('woff2');
+}

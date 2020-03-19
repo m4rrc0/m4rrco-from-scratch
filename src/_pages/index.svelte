@@ -22,16 +22,16 @@
     <p>
       As you can see there is not much here yet but the goal is to build and
       <!-- prettier-ignore -->
-      <a href="https://www.swyx.io/writing/learn-in-public/">learn in public</a>
-      .
+      <a href="https://www.swyx.io/writing/learn-in-public/">
+        learn in public.
+      </a>
     </p>
     <p>
       I have been teaching myself web development for approximately 5 years now.
       Among other things I have been freelancing and creating a
       <a href="https://github.com/toile-webstack/gatsby-site-builder">
-        proto jamstack website builder
+        proto jamstack website builder.
       </a>
-      .
     </p>
     <p>
       These wanderings lead me to a lot of reflexion about what I'll call the
