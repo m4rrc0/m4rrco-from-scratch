@@ -7,12 +7,18 @@ import throttle from 'lodash.throttle';
 import liveServer from 'live-server';
 // IDEA: we can use npm package "minify" to also process CSS
 import { minify as htmlMinifier } from 'html-minifier';
-import sass from 'node-sass';
+// import sass from 'node-sass';
 import postcss from 'postcss';
-import autoprefixer from 'autoprefixer';
+import postcssImport from 'postcss-import';
+import postcssMixins from 'postcss-mixins';
+import postcssFunctions from 'postcss-functions';
 import postcssPresetEnv from 'postcss-preset-env';
+// import postcssPurgecss from '@fullhuman/postcss-purgecss';
+// import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 
+import cssMixins from '../../src/styles/mixins';
+import cssFunctions from '../../src/styles/functions';
 import slugify from '../../utils/slugify';
 import {
   cleanDist,
@@ -264,61 +270,39 @@ async function minifyHtml({ html, pagePath }) {
   }
 }
 
-async function compileSass({ entryPath: file, includePaths }) {
-  const outputPath = file.replace(/\.scss$/, '.css').replace(/^src/, 'dist');
-  let output = '';
+async function compileCss({ inputPath }) {
+  const outputPath = inputPath
+    .replace(/\.scss$/, '.css')
+    .replace(/^src/, 'dist');
+  // let output = '';
+
   try {
-    sass.render(
-      {
-        file,
-        // includePaths: ['lib/', 'mod/'],
-        includePaths,
-        outputStyle: shouldMinify ? 'compressed' : 'expanded',
-      },
-      async function(error, result) {
-        // node-style callback from v3.0.0 onwards
-        if (error) {
-          // console.log(error.status); // used to be "code" in v2x and below
-          // console.log(error.column);
-          // console.log(error.message);
-          // console.log(error.line);
-          console.log(JSON.stringify(error));
-          throw new Error(error);
-        } else {
-          // console.log(result.css.toString());
-          // console.log(result.stats);
-          // console.log(result.map.toString());
-          // or better
-          // console.log(JSON.stringify(result.map)); // note, JSON.stringify accepts Buffer too
-
-          output = result.css.toString();
-
-          // await fs.writeFile(outputPath, output);
-          postcss([
-            postcssPresetEnv,
-            autoprefixer,
-            ...(shouldMinify ? [cssnano] : []),
-          ])
-            .process(output, { from: file, to: outputPath })
-            .then(postcssed => {
-              fs.writeFile(outputPath, postcssed.css);
-              if (postcssed.map) {
-                fs.writeFile(`${outputPath}.map`, postcssed.map);
-              }
-              console.log(
-                `SASS files compiled in ${outputPath} in ${result.stats.duration}ms`
-              );
-            })
-            .catch(err => {
-              console.log(`SASS files could not compile in ${outputPath}`);
-              console.error(err);
-            });
+    // css to be processed
+    const input = await fs.readFile(inputPath, 'utf8');
+    postcss([
+      postcssImport,
+      postcssMixins({ mixins: cssMixins }),
+      postcssFunctions({ functions: cssFunctions }),
+      postcssPresetEnv({ stage: 0 }),
+      // postcssPurgecss({ content: ['dist/**/*.html'] }),
+      // autoprefixer, // included into postcssPresetEnv
+      ...(shouldMinify ? [cssnano] : []),
+    ])
+      .process(input, { from: inputPath, to: outputPath })
+      .then(postcssed => {
+        fs.writeFile(outputPath, postcssed.css);
+        if (postcssed.map) {
+          fs.writeFile(`${outputPath}.map`, postcssed.map);
         }
-      }
-    );
+        console.log(`CSS post-processed successfully at ${outputPath}`);
+      })
+      .catch(err => {
+        console.log(`CSS files could not compile in ${outputPath}`);
+        console.error(err);
+      });
   } catch (err) {
     console.log('');
-    console.error(`Failed to compile sass: ${file}`);
+    console.error(`Failed to compile sass: ${inputPath}`);
     console.error(err);
     console.log('');
   }
@@ -333,9 +317,9 @@ async function initialBuild() {
     'src/**/!(*+(spec|test)).+(js|mjs|svelte|md)',
     globConfig
   );
-  const sassFiles = glob.sync('src/**/!(*+(spec|test)).+(scss)', globConfig);
+  const cssFiles = glob.sync('src/**/!(*+(spec|test)).+(css)', globConfig);
   const otherAssetFiles = glob.sync(
-    'src/**/*.!(spec.[tj]s|test.[tj]s|[tj]s|mjs|svelte|md|scss)',
+    'src/**/*.!(spec.[tj]s|test.[tj]s|[tj]s|mjs|svelte|md|css)',
     globConfig
   );
 
@@ -345,20 +329,6 @@ async function initialBuild() {
       concurrencyLimit(async () => copyFile(srcPath))
     )
   );
-
-  // Compile sass and css files
-  // await Promise.all(
-  //   sassFiles.map(sassEntryPath =>
-  //     concurrencyLimit(async () => compileSass(sassEntryPath))
-  //   )
-  // );
-  // console.log(__dirname);
-  // console.log(process.cwd());
-  await compileSass({
-    // entryPath: `${process.cwd()}/src/global.scss`,
-    entryPath: `src/global.scss`,
-    // includePaths: [`${process.cwd()}/src/styles`],
-  });
 
   const svelteWarnings = [];
 
@@ -478,6 +448,21 @@ async function initialBuild() {
       })
     )
   );
+
+  // NOTE: we put this after HTML compilation because of purgeCSS working on dist html files
+  // Compile sass and css files
+  // await Promise.all(
+  //   sassFiles.map(inputPath =>
+  //     concurrencyLimit(async () => compileSass(inputPath))
+  //   )
+  // );
+  // console.log(__dirname);
+  // console.log(process.cwd());
+  await compileCss({
+    // inputPath: `${process.cwd()}/src/global.scss`,
+    inputPath: `src/global.css`,
+    // includePaths: [`${process.cwd()}/src/styles`],
+  });
 
   // Minify js files with terser if in production.
   if (shouldMinify) {

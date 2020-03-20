@@ -1,0 +1,72 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Literata:ital,wght@0,400..700;1,400..700&display=swap'); */
+/* NOTE: can use 'text' param in url */
+/* abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !:/;.,?-"'()[]&éèàçêë€$£ç */
+/* URL encoded becomes */
+/* abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%20%21%3A%2F%3B.%2C%3F-%22%27%28%29%5B%5D%26%C3%A9%C3%A8%C3%A0%C3%A7%C3%AA%C3%AB%E2%82%AC%24%C2%A3%C3%A7 */
+/* EX */
+/* https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&text=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%20%21%3A%2F%3B.%2C%3F-%22%27%28%29%5B%5D%26%C3%A9%C3%A8%C3%A0%C3%A7%C3%AA%C3%AB%E2%82%AC%24%C2%A3%C3%A7 */
+
+:root {
+  /* FONTS */
+  --font-body: var(--font-body-fallback);
+  --font-heading: var(--font-heading-fallback);
+  --font-mono: var(--font-mono-fallback);
+
+  --mono: 0; /* Monospace: Sans (natural-width) or Mono (fixed-width) */
+  --casl: 0; /* Casual: Linear to Casual */
+  --wght: 400; /* Weight: 300 to 1000, Light to ExtraBlack – usually set with `font-weight` */
+  --slnt: 0; /* Slant: 0 to -15 degrees */
+  --ital: 0; /* Italic: always roman, auto, or always italic */
+}
+html {
+  font-family: var(--font-body-fallback);
+  &.fonts-stage-1 {
+    --font-body: var(--font-body-critical), var(--font-body-fallback);
+    --font-heading: var(--font-heading-critical), var(--font-heading-fallback);
+    --font-mono: var(--font-mono-critical), var(--font-mono-fallback);
+  }
+  @supports (font-variation-settings: 'wght' 700) {
+    &.fonts-stage-2 {
+      --font-body: var(--font-body-prefered), var(--font-body-critical),
+        var(--font-body-fallback);
+      --font-heading: var(--font-heading-prefered), var(--font-heading-critical),
+        var(--font-heading-fallback);
+      --font-mono: var(--font-mono-prefered), var(--font-mono-critical),
+        var(--font-mono-fallback);
+    }
+  }
+}
+
+* {
+  /* apply axis values with CSS custom properties */
+  font-variation-settings: 'MONO' var(--mono), 'CASL' var(--casl),
+    'wght' var(--wght), 'slnt' var(--slnt), 'ital' var(--ital);
+
+  font-family: var(--font-body);
+}
+
+:--headings {
+  font-weight: 700;
+  --wght: 700;
+  /* --casl: 0.2; */
+  /* --slnt: -2; */
+  font-family: var(--font-heading);
+}
+
+:--code {
+  --mono: 1;
+  /* --casl: 1; */
+  /* --ital: 1; */
+  font-family: var(--font-mono);
+}
+
+:--bold {
+  font-weight: 700;
+  --wght: 700;
+}
+
+:--em {
+  font-style: italic;
+  --slnt: -10;
+  --ital: 1;
+}

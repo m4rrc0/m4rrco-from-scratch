@@ -29,9 +29,9 @@ body,
   /* --color-button_disabled-text: var(--color-secondary);
   --color-button_disabled-bg: var(--color-bg); */
 
-  // --color-code-text: var(--color-bg);
-  // --color-code-bg: var(--color-secondary);
-  // --color-code-border: var(--color-primary);
+  /* --color-code-text: var(--color-bg); */
+  /* --color-code-bg: var(--color-secondary); */
+  /* --color-code-border: var(--color-primary); */
 
   /* Let's assign variables to every possible css color property */
   /* ATTENTION: this is also the defaults in case custom properties are not supported */

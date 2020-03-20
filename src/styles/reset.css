@@ -28,7 +28,8 @@ figure,
 figcaption,
 blockquote,
 dl,
-dd {
+dd,
+pre {
   margin: 0;
 }
 /* Set core body defaults */
