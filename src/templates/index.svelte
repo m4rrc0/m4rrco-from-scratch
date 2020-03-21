@@ -189,11 +189,14 @@
 </SEO>
 
 <div id="template-global">
-  <nav class="stack horizontal">
-    <a href="/">Home</a>
-    <a href="/blog/">Blog</a>
-    <a href="/tests/">Tests</a>
-    <a href="/subscribe/">Subscribe</a>
+  <nav class="cluster">
+    <div>
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/tests/">Tests</a>
+      <a href="/styleguide/">Styleguide</a>
+      <a href="/subscribe/">Subscribe</a>
+    </div>
   </nav>
   <slot />
   <script src="/assets/js/instant.page.js" defer>
@@ -202,11 +205,11 @@
 </div>
 
 <style>
-  a {
-    padding: var(--gap, 1rem) 0;
-  }
-
   #template-global {
     margin-bottom: var(--gap-xxl);
+  }
+  nav {
+    --gap: var(--size-h6);
+    margin: var(--gap) 0;
   }
 </style>

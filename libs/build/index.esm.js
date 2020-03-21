@@ -17,6 +17,7 @@ import postcssPresetEnv from 'postcss-preset-env';
 // import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 
+// import cssTokens from '../../src/styles/tokens';
 import cssMixins from '../../src/styles/mixins';
 import cssFunctions from '../../src/styles/functions';
 import slugify from '../../utils/slugify';
@@ -283,7 +284,15 @@ async function compileCss({ inputPath }) {
       postcssImport,
       postcssMixins({ mixins: cssMixins }),
       postcssFunctions({ functions: cssFunctions }),
-      postcssPresetEnv({ stage: 0 }),
+      postcssPresetEnv({
+        stage: 0,
+        features: {
+          'environment-variables': {
+            importFrom: `src/styles/tokens.js`,
+            // importFrom: { environmentVariables: { ...cssTokens } },
+          },
+        },
+      }),
       // postcssPurgecss({ content: ['dist/**/*.html'] }),
       // autoprefixer, // included into postcssPresetEnv
       ...(shouldMinify ? [cssnano] : []),

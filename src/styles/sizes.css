@@ -7,19 +7,6 @@ s... = scale values determined by size-scale-ratio
 size-lock... = used for computing css locks for every size we need
 */
 :root {
-  /* --measure-max: none; */
-  /* --measure-large: none; */
-  /* --measure-text: 65ch; */
-  /* --measure-text: 38rem; */
-  /* --measure-aside: 65ch; */
-  /* --measure-small: none; */
-
-  /* --size-base-px: 16; unitless px value (if necessary) */
-  /* --size-base: calc(var(--size-base-px) / 16); unitless rem value */
-  /* --size-max-px: 100; */
-  /* --size-scale-steps: 12; */
-  /* --size-scale-ratio: 1.165; can be computed by (maxSize / baseSize) ** (1 / steps) */
-
   --s-12: calc(var(--s-11) / var(--size-scale-ratio));
   --s-11: calc(var(--s-10) / var(--size-scale-ratio));
   --s-10: calc(var(--s-9) / var(--size-scale-ratio));
@@ -32,7 +19,7 @@ size-lock... = used for computing css locks for every size we need
   --s-3: calc(var(--s-2) / var(--size-scale-ratio));
   --s-2: calc(var(--s-1) / var(--size-scale-ratio));
   --s-1: var(--s0);
-  --s0: calc(var(--size-base));
+  --s0: var(--size-base);
   --s1: var(--s0);
   --s2: calc(var(--s1) * var(--size-scale-ratio));
   --s3: calc(var(--s2) * var(--size-scale-ratio));
@@ -45,17 +32,6 @@ size-lock... = used for computing css locks for every size we need
   --s10: calc(var(--s9) * var(--size-scale-ratio));
   --s11: calc(var(--s10) * var(--size-scale-ratio));
   --s12: calc(var(--s11) * var(--size-scale-ratio));
-
-  --size-lock-screen-min: 20;
-  --size-lock-screen-max: 88;
-  /* --fluid-min-screen-px: 400;
-    --fluid-min-screen: calc(var(--fluid-min-screen-px) / var(--size-base-px));
-    --fluid-max-screen-px: 600;
-    --fluid-max-screen: calc(var(--fluid-max-screen-px) / (var(--size-base-max) * var(--size-base-px))); */
-  /* TODO: does not work */
-
-  --size-lock-min: var(--s0);
-  --size-lock-max: var(--s3);
 }
 
 /* 2. ------------------------------------
@@ -63,10 +39,9 @@ We will use "size contexts" to determine the mins and max to use for the compute
 
 .size-context-main,
 body {
-  --gap-out: 1rem; /* ?? margin of the context itself */
-  --gap-in: 1rem; /* ?? padding of the context itself */
-  --gap-between: 1rem; /* ?? gap between children of the context */
-
+  /* Default sizing for title */
+  --size-h0-max: var(--s9);
+  --size-h0-min: var(--s6);
   --size-h1-max: var(--s6);
   --size-h1-min: var(--s4);
   --size-h2-max: var(--s4);
@@ -75,6 +50,8 @@ body {
   --size-h3-min: var(--s1);
   --size-h4-max: var(--s1);
   --size-h4-min: var(--s0);
+  --size-p-max: var(--s1);
+  --size-p-min: var(--s0);
   --size-h5-max: var(--s0);
   --size-h5-min: var(--s-1);
   --size-h6-max: var(--s-1);
@@ -86,6 +63,9 @@ body {
 }
 
 .size-context-massive {
+  /* Sizing for massive titles in sections */
+  --size-h0-max: var(--s12);
+  --size-h0-min: var(--s5);
   --size-h1-max: var(--s10);
   --size-h1-min: var(--s4);
   --size-h2-max: var(--s8);
@@ -94,6 +74,8 @@ body {
   --size-h3-min: var(--s2);
   --size-h4-max: var(--s2);
   --size-h4-min: var(--s1);
+  --size-p-max: var(--s2);
+  --size-p-min: var(--s1);
   --size-h5-max: var(--s1);
   --size-h5-min: var(--s-2);
   --size-h6-max: var(--s-2);
@@ -115,119 +97,79 @@ the lock is the fluid value
 the size-... is the fluid value bound within a min and max IF the browser supports min/max css functions ELSE it will just be the fluid value
 */
 
-/* * { */
-/* :root { */
-/* .size-context-main,
-body { */
 body,
 *[class*='size-context-'] {
-  /* With formula... do we need media queries??? */
-  --lock: calc(
-    (var(--size-lock-min) * 1rem) +
-      (var(--size-lock-max) - var(--size-lock-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
+  /* ARCHIVE: Lock formula */
+  /* --lock-h0: calc(
+    (var(--size-h0-min) * 1rem) +
+    (var(--size-h0-max) - var(--size-h0-min)) *
+    (100vw - (var(--size-lock-screen-min) * 1rem)) /
+    (var(--size-lock-screen-max) - var(--size-lock-screen-min))
   );
-  --size-font: var(--lock);
+  --lock-h1: ...
+  --lock-h2: ... */
+  @mixin locks h0, h1, h2, h3, h4, p, h5, h6, h7, h8;
+  /* Can also use function */
+  /* --lock-h1: lock(var(--size-h1-min),var(--size-h1-max),var(--size-lock-screen-min),var(--size-lock-screen-max)); */
 
-  --lock-h1: calc(
-    (var(--size-h1-min) * 1rem) + (var(--size-h1-max) - var(--size-h1-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h2: calc(
-    (var(--size-h2-min) * 1rem) + (var(--size-h2-max) - var(--size-h2-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h3: calc(
-    (var(--size-h3-min) * 1rem) + (var(--size-h3-max) - var(--size-h3-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h4: calc(
-    (var(--size-h4-min) * 1rem) + (var(--size-h4-max) - var(--size-h4-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h5: calc(
-    (var(--size-h5-min) * 1rem) + (var(--size-h5-max) - var(--size-h5-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h6: calc(
-    (var(--size-h6-min) * 1rem) + (var(--size-h6-max) - var(--size-h6-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h7: calc(
-    (var(--size-h7-min) * 1rem) + (var(--size-h7-max) - var(--size-h7-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-  --lock-h8: calc(
-    (var(--size-h8-min) * 1rem) + (var(--size-h8-max) - var(--size-h8-min)) *
-      (100vw - (var(--size-lock-screen-min) * 1rem)) /
-      (var(--size-lock-screen-max) - var(--size-lock-screen-min))
-  );
-
+  /* --size-font: var(--lock); */
+  --size-h0: var(--lock-h0);
   --size-h1: var(--lock-h1);
   --size-h2: var(--lock-h2);
   --size-h3: var(--lock-h3);
   --size-h4: var(--lock-h4);
+  --size-p: var(--lock-p);
   --size-h5: var(--lock-h5);
   --size-h6: var(--lock-h6);
   --size-h7: var(--lock-h7);
   --size-h8: var(--lock-h8);
-}
-@supports (font-size: min(max(16px, 2.2vw), 22px)) {
-  body,
-  *[class*='size-context-'] {
-    /* Combination with the formula to avoid media queries */
-    /* NOTE: Have to use @support because for some reason firefox is not skipping the rule */
-    --size-font: min(
-      max((var(--size-lock-min) * 1rem), var(--lock)),
-      (var(--size-lock-max)) * 1rem
-    );
-    /* TODO: I am not sure I want to block the size because of TVs and other very large screens */
-    /* The short solution lacks control and browser support */
+
+  /* NOTE: Have to use @support because for some reason firefox is not skipping the rule even though it does not know min(max()) */
+  @supports (font-size: min(max(16px, 2.2vw), 22px)) {
+    /* ARCHIVE: Clamp lacks browser support */
+    /* --size-h0: clamp((var(--size-h0-min) * 1rem), var(--lock-h0), (var(--size-h0-max) * 1rem)); */
     /* https://caniuse.com/#feat=css-math-functions */
     /* See https://css-tricks.com/simplified-fluid-typography/ */
-    /* font-size: min(max(16px, 2.2vw), 22px);
-      font-size: clamp(16px, 2.2vw, 22px); */
 
-    --size-h1: min(
-      max((var(--size-h1-min) * 1rem), var(--lock-h1)),
-      (var(--size-h1-max)) * 1rem
-    );
-    --size-h2: min(
-      max((var(--size-h2-min) * 1rem), var(--lock-h2)),
-      (var(--size-h2-max)) * 1rem
-    );
-    --size-h3: min(
-      max((var(--size-h3-min) * 1rem), var(--lock-h3)),
-      (var(--size-h3-max)) * 1rem
-    );
-    --size-h4: min(
-      max((var(--size-h4-min) * 1rem), var(--lock-h4)),
-      (var(--size-h4-max)) * 1rem
-    );
-    --size-h5: min(
-      max((var(--size-h5-min) * 1rem), var(--lock-h5)),
-      (var(--size-h5-max)) * 1rem
-    );
-    --size-h6: min(
-      max((var(--size-h6-min) * 1rem), var(--lock-h6)),
-      (var(--size-h6-max)) * 1rem
-    );
-    --size-h7: min(
-      max((var(--size-h7-min) * 1rem), var(--lock-h7)),
-      (var(--size-h7-max)) * 1rem
-    );
-    --size-h8: min(
-      max((var(--size-h8-min) * 1rem), var(--lock-h8)),
-      (var(--size-h8-max)) * 1rem
-    );
+    /* Combination with the formula to avoid media queries */
+    /* prettier-ignore */
+    --size-h0: min(max((var(--size-h0-min) * 1rem), var(--lock-h0)), (var(--size-h0-max) * 1rem)); /* prettier-ignore */
+    --size-h1: min(max((var(--size-h1-min) * 1rem), var(--lock-h1)), (var(--size-h1-max) * 1rem)); /* prettier-ignore */
+    --size-h2: min(max((var(--size-h2-min) * 1rem), var(--lock-h2)), (var(--size-h2-max) * 1rem)); /* prettier-ignore */
+    --size-h3: min(max((var(--size-h3-min) * 1rem), var(--lock-h3)), (var(--size-h3-max) * 1rem)); /* prettier-ignore */
+    --size-h4: min(max((var(--size-h4-min) * 1rem), var(--lock-h4)), (var(--size-h4-max) * 1rem)); /* prettier-ignore */
+    --size-p: min(max((var(--size-p-min) * 1rem), var(--lock-p)), (var(--size-p-max) * 1rem)); /* prettier-ignore */
+    --size-h5: min(max((var(--size-h5-min) * 1rem), var(--lock-h5)), (var(--size-h5-max) * 1rem)); /* prettier-ignore */
+    --size-h6: min(max((var(--size-h6-min) * 1rem), var(--lock-h6)), (var(--size-h6-max) * 1rem)); /* prettier-ignore */
+    --size-h7: min(max((var(--size-h7-min) * 1rem), var(--lock-h7)), (var(--size-h7-max) * 1rem)); /* prettier-ignore */
+    --size-h8: min(max((var(--size-h8-min) * 1rem), var(--lock-h8)), (var(--size-h8-max) * 1rem));
+  }
+  /* If no support for min(max()) we use media queries for more predictability */
+  @supports not (font-size: min(max(16px, 2.2vw), 22px)) {
+    @media (width > calc(env(--size-lock-screen-max) * 1rem)) {
+      --size-h0: calc(var(--size-h0-max) * 1rem);
+      --size-h1: calc(var(--size-h1-max) * 1rem);
+      --size-h2: calc(var(--size-h2-max) * 1rem);
+      --size-h3: calc(var(--size-h3-max) * 1rem);
+      --size-h4: calc(var(--size-h4-max) * 1rem);
+      --size-p: calc(var(--size-p-max) * 1rem);
+      --size-h5: calc(var(--size-h5-max) * 1rem);
+      --size-h6: calc(var(--size-h6-max) * 1rem);
+      --size-h7: calc(var(--size-h7-max) * 1rem);
+      --size-h8: calc(var(--size-h8-max) * 1rem);
+    }
+    @media (width < calc(env(--size-lock-screen-min) * 1rem)) {
+      --size-h0: calc(var(--size-h0-min) * 1rem);
+      --size-h1: calc(var(--size-h1-min) * 1rem);
+      --size-h2: calc(var(--size-h2-min) * 1rem);
+      --size-h3: calc(var(--size-h3-min) * 1rem);
+      --size-h4: calc(var(--size-h4-min) * 1rem);
+      --size-p: calc(var(--size-p-min) * 1rem);
+      --size-h5: calc(var(--size-h5-min) * 1rem);
+      --size-h6: calc(var(--size-h6-min) * 1rem);
+      --size-h7: calc(var(--size-h7-min) * 1rem);
+      --size-h8: calc(var(--size-h8-min) * 1rem);
+    }
   }
 }
 

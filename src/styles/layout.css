@@ -47,3 +47,367 @@ horizontal: class bool
 .stack.horizontal.split-after-1 > :nth-child(1) {
   margin-right: auto;
 }
+
+/* -------- CLUSTER ------------ */
+/*
+gap: var dimension
+justifyContent: var + class
+alignItems: var + class
+alignContent: var + class
+*/
+.cluster {
+  overflow: hidden;
+}
+.cluster > * {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  justify-content: var(--justify-content, flex-start);
+  align-items: center;
+  align-items: var(--align-items, center);
+  align-content: stretch;
+  align-content: var(--align-content, stretch);
+  margin: calc(var(--gap) / 2 * -1);
+}
+.cluster > * > * {
+  margin: calc(var(--gap) / 2);
+}
+/* prettier-ignore */
+.cluster.justify-stretch > * { justify-content: stretch; } /* prettier-ignore */
+.cluster.justify-center > * { justify-content: center; } /* prettier-ignore */
+.cluster.justify-start > * { justify-content: flex-start; } /* prettier-ignore */
+.cluster.justify-end > * { justify-content: flex-end; } /* prettier-ignore */
+.cluster.justify-space-between > * { justify-content: space-between; } /* prettier-ignore */
+.cluster.justify-space-around > * { justify-content: space-around; } /* prettier-ignore */
+.cluster.justify-space-evenly > * { justify-content: space-around; justify-content: space-evenly; } /* prettier-ignore */
+.cluster.align-items-stretch > * { align-items: stretch; } /* prettier-ignore */
+.cluster.align-items-center > * { align-items: center; } /* prettier-ignore */
+.cluster.align-items-start > * { align-items: flex-start; } /* prettier-ignore */
+.cluster.align-items-end > * { align-items: flex-end; } /* prettier-ignore */
+.cluster.align-content-baseline > * { align-content: baseline; } /* prettier-ignore */
+.cluster.align-content-center > * { align-content: center; } /* prettier-ignore */
+.cluster.align-content-start > * { align-content: flex-start; } /* prettier-ignore */
+.cluster.align-content-end > * { align-content: flex-end; } /* prettier-ignore */
+.cluster.align-content-space-between > * { align-content: space-between; } /* prettier-ignore */
+.cluster.align-content-space-around > * { align-content: space-around; } /* prettier-ignore */
+.cluster.align-content-space-evenly > * { align-content: space-around; align-content: space-evenly; } /* prettier-ignore */
+.cluster.align-content-stretch > * { align-content: stretch; } /* prettier-ignore */
+
+/* TODO: reel for <pre> */
+/* 
+// TODO: Javascript observer for scrollbar ?
+  // TODO: ? implement background attachment local for affordance. http://lea.verou.me/2012/04/background-attachment-local/
+  reel: ({
+    itemWidth = 'auto', // The width of each child element
+    height = 'auto', // The height of the parent (Reel) element
+    space = ['1rem', 'var(--s0, 1rem)'], // The space between each child element, and between the child elements and the scrollbar
+    noBar = false, // Whether to display the scrollbar
+    trackColor = 'currentcolor',
+    thumbColor = 'white',
+    noJS = false, // Wether the observer has been setup to manage the "overflowing" classname
+  } = {}) => {
+    const g = groupTwoParams(thumbColor, trackColor)
+
+    return {
+      display: 'flex',
+      height,
+      overflowX: 'auto',
+      overflowY: 'hidden',
+      ...(noBar && {
+        scrollbarWidth: 'none',
+      }),
+
+      [`& > ${star}`]: {
+        // flex: mapIfArray(itemWidth, iw => `0 0 ${iw}`),
+        flex: '0 0',
+        flexBasis: itemWidth,
+      },
+      '& > img, & > .img, & > .image': {
+        height: '100%',
+        flexBasis: 'auto',
+        width: 'auto',
+      },
+      [`& > ${star} + ${star}`]: {
+        marginLeft: space,
+      },
+
+      [noJS ? '&' : '&.overflowing']: {
+        // if we setup the observer, className will change
+        ...(!noBar && {
+          paddingBottom: space,
+        }),
+      },
+
+      '&::-webkit-scrollbar': {
+        height: '1rem',
+        ...(noBar && {
+          display: 'none',
+        }),
+      },
+
+      scrollbarColor: mapIfArray(g, o => `${o.main} ${o.second}`),
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: trackColor,
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: trackColor,
+        backgroundImage: mapIfArray(
+          g,
+          o =>
+            `linear-gradient(${o.second} 0, ${o.second} 0.25rem, ${o.main} 0.25rem, ${o.main} 0.75rem, ${o.second} 0.75rem)`
+        ),
+      },
+    }
+  }, */
+
+/* TODO: the rest */
+/* box: ({
+    padding = ['1rem', 'var(--s0, 1rem)'], // The amount by with the Box is padded on all sides
+    borderWidth = '0', // The width of the (solid) border. If empty or 0, the transparent outline is instated for high contrast mode
+  } = {}) => ({
+    display: 'block',
+    padding,
+    borderWidth,
+    borderStyle: 'solid',
+    // color: "var(--color-dark)",
+    // backgroundColor: "var(--color-light)",
+    ...(!borderWidth && {
+      /* ↓ For high contrast mode
+      outline: mapIfArray(borderWidth, bw => `${bw} solid transparent`),
+      outlineOffset: mapIfArray(borderWidth, bw => `calc(${bw} * -1)`),
+    }),
+
+    // " *": {
+    //   color: "inherit",
+    // },
+  }),
+
+  center: ({
+    maxWidth = ['65ch', 'var(--measure, 65ch)'], // The maximum width of the centered element
+    andText = false, // Whether to apply text-align: center too
+    gutters = 0, // The minimum space on either side of the content
+    intrinsic = false, // Center child elements based on their content width. e.g. center a button
+  }) => ({
+    display: 'block',
+    boxSizing: 'content-box',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    maxWidth,
+    ...(andText && { textAlign: 'center' }),
+    ...(gutters && {
+      paddingLeft: gutters,
+      paddingRight: gutters,
+    }),
+    ...(intrinsic && {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }),
+  }),
+
+
+  sidebar: ({
+    side = 'left', // Whether the sidebar element is the :last-child or :first-child
+    sideWidth = null, // The width of the sidebar (empty means not set; defaults to the content width)
+    contentMin = '50%', // The narrowest the content (main) element can be before wrapping. Should be a percentage.
+    space = ['1rem', 'var(--s0, 1rem)'], // The space (margin) between the sidebar and non-sidebar
+    noStretch = false, // Make the adjacent elements adopt their natural height
+  } = {}) => {
+    // g is groupedArrayForMinWidth
+    const g = groupTwoParams(space, contentMin)
+
+    return {
+      overflow: 'hidden',
+      [`> ${star}`]: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        margin: mapIfArray(space, s => `calc(${s} / 2 * -1)`),
+        ...(noStretch && { alignItems: 'flex-start' }),
+      },
+      [`> ${star} > ${star}`]: {
+        margin: mapIfArray(space, s => `calc(${s} / 2)`),
+        flexGrow: 1,
+        ...(sideWidth && { flexBasis: sideWidth }),
+      },
+      [side === 'right'
+        ? `> ${star} > :first-child`
+        : `> ${star} > :last-child`]: {
+        flexBasis: 0,
+        flexGrow: 999,
+        // minWidth: `calc(${contentMin} - ${space})`,
+        minWidth: mapIfArray(g, o => `calc(${o.second} - ${o.main})`),
+      },
+    }
+  },
+
+  switcher: ({
+    treshold = ['30ch', 'calc(var(--measure, 65ch) / 2)'], // The container width at which the component switches between a horizontal and vertical layout
+    space = ['1rem', 'var(--s0, 1rem)'], // The space (margin) between the (child) elements
+    limit = 4, // The maximum number of elements allowed to appear in the horizontal configuration
+  } = {}) => {
+    const g = groupTwoParams(treshold, space)
+    return {
+      display: 'block',
+      [`> ${star}`]: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        overflow: 'hidden',
+        margin: mapIfArray(space, s => `calc(${s} / 2 * -1)`),
+      },
+      [`> ${star} > ${star}`]: {
+        flexBasis: mapIfArray(
+          g,
+          o => `calc((${o.main} - (100% - ${o.second})) * 999)`
+        ),
+        flexGrow: 1,
+        margin: mapIfArray(space, s => `calc(${s} / 2)`),
+      },
+      [`& > ${star} > :nth-last-child(n + ${limit +
+        1}), & > ${star} > :nth-last-child(n + ${limit + 1}) ~ ${star}`]: {
+        flexBasis: '100%',
+      },
+    }
+  },
+
+  cover: ({
+    centered = 'h1', // The element that should be towards the vertical center of the space. Identify with a simple selector like h2 or .centered
+    space = ['1rem', 'var(--s0, 1rem)'], // The minimum space between and around the child elements
+    minHeight = '100vh', // The minimum height of the parent element, before it grows to accommodate its content
+    noPad = false, // Whether to remove the padding from the parent element
+  } = {}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight,
+    ...(!noPad && { padding: space }),
+    [`> ${star}`]: {
+      marginTop: space,
+      marginBottom: space,
+    },
+    [`> :first-child:not(${centered})`]: {
+      marginTop: 0,
+    },
+    [`> : last - child: not(${centered})`]: {
+      marginBottom: 0,
+    },
+    [`> ${centered}`]: {
+      marginTop: 'auto',
+      marginBottom: 'auto',
+    },
+  }),
+
+  grid: ({
+    min = '250px', // A CSS length value representing x in minmax(min(x, 100%), 1fr)
+    space = ['1rem', 'var(--s0, 1rem)'], // The space (grid-gap) between the grid children / cells
+    applyAnyway = false,
+    useFlexbox = false,
+    flexBasis = null,
+    flexGrow,
+    justifyContent,
+  } = {}) => {
+    const gtc = {
+      gridTemplateColumns: mapIfArray(
+        min,
+        m => `repeat(auto-fill, minmax(${m}, 1fr))`
+      ),
+    }
+
+    return useFlexbox
+      ? {
+          overflow: 'hidden',
+          [`> ${star}`]: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: justifyContent || 'baseline', // NOTE: interesting?
+            margin: mapIfArray(space, s => `calc(${s} / 2 * -1)`),
+            [`> ${star}`]: {
+              flex: `1 1`,
+              flexGrow: typeof flexGrow !== 'undefined' ? flexGrow : 1, // NOTE: interesting?
+              flexBasis: flexBasis || min,
+              // maxWidth: `calc(${flexBasis || min} * 2)`, // NOTE: interesting?
+              margin: mapIfArray(space, s => `calc(${s} / 2)`),
+            },
+          },
+        }
+      : {
+          display: 'contents',
+          [`> ${star}`]: {
+            display: 'grid',
+            gridGap: space,
+            alignContent: 'start',
+            gridTemplateColumns: '100%',
+            '&.aboveMin': {
+              // TODO: this depends on the observer function
+              ...gtc,
+            },
+            // BEST CASE SCENARIO
+            // the min() function has limited support but allows this to work without JS
+            [`@supports (width: min(${min[0] || min}, 100%))`]: {
+              gridTemplateColumns: mapIfArray(
+                min,
+                m => `repeat(auto-fit, minmax(min(${m}, 100%), 1fr))`
+              ),
+            },
+            ...(applyAnyway && gtc),
+          },
+        }
+  },
+
+  frame: ({
+    ratio = '16/9', // The element's aspect ratio
+  } = {}) => {
+    return {
+      display: 'block',
+      position: 'relative',
+      paddingBottom: mapIfArray(ratio, r => {
+        const [num, den] = r.split('/')
+        return `calc(${den} / ${num} * 100%)`
+      }),
+      [`& > ${star}`]: {
+        overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      '& > img, & > video': {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+      },
+    }
+  },
+
+  ratio: ({
+    ratio = '16/9', // The element's aspect ratio
+    fit = 'cover', // Object-fit for images
+  }) => ({
+    position: 'relative',
+    // '& > :first-child': {
+    //   width: '100%',
+    // },
+    '& > img, & > picture > img': {
+      // height: 'auto',
+      height: '100%',
+      width: '100%',
+      objectFit: fit,
+    },
+    '&::before': {
+      content: '""',
+      display: 'block',
+      paddingBottom: mapIfArray(ratio, r => {
+        const [num, den = 1] = `${r}`.split('/')
+        return `calc(100% / (${num} / ${den}))`
+      }),
+    },
+    '& > :first-child': {
+      width: '100%',
+      position: 'absolute',
+      top: '0',
+      left: '0',
+      height: '100%',
+    },
+  }), */

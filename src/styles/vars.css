@@ -1,25 +1,35 @@
 :root {
-  --font-body-prefered: 'Open Sans'; /* 'Literata', 'Recursive' */
-  --font-body-critical: sans-serif; /* 'LiterataCritical' */
-  --font-body-fallback: sans-serif;
-  --font-heading-prefered: 'Josefin Sans'; /* 'Josefin Sans', 'Recursive' */
-  --font-heading-critical: 'JosefinSansCritical'; /* 'JosefinSansCritical', 'RecursiveCritical' */
-  --font-heading-fallback: sans-serif;
-  --font-mono-prefered: monospace; /* 'Fira Code', 'Recursive' */
-  --font-mono-critical: monospace; /* 'FiraCodeCritical' */
-  --font-mono-fallback: monospace;
+  /* --- FONTS --- */
+  --font-body-prefered: env(--font-body-prefered);
+  --font-body-critical: env(--font-body-critical);
+  --font-body-fallback: env(--font-body-fallback);
+  --font-heading-prefered: env(--font-heading-prefered);
+  --font-heading-critical: env(--font-heading-critical);
+  --font-heading-fallback: env(--font-heading-fallback);
+  --font-mono-prefered: env(--font-mono-prefered);
+  --font-mono-critical: env(--font-mono-critical);
+  --font-mono-fallback: env(--font-mono-fallback);
 
-  /* --measure-text: 65ch; */
-  --measure-text: 38rem;
+  /* --- SIZES --- */
+  --measure-text: env(--measure-text);
 
-  --size-base-px: 16; /* unitless px value (if necessary) */
+  --size-base-px: env(--size-base-px); /* unitless px value (if necessary) */
+  /* unitless px value of max size cross site (if necessary) */
+  --size-max-px: env(--size-max-px);
+  --size-scale-steps: env(--size-scale-steps);
   --size-base: calc(var(--size-base-px) / 16); /* unitless rem value */
-  /* --size-max-px: 100; */
-  /* --size-scale-steps: 12; */
-  /* --size-scale-ratio: 1.165; */
   /* can be computed by (maxSize / baseSize) ** (1 / steps) */
-  /* (baseSize = 16, maxSize = 100, steps = 12) */
-  --size-scale-ratio: sizeScaleRatio();
+  /* (baseSize = 16, maxSize = 100, steps = 12) => 1.16499 */
+  /* --size-scale-ratio: sizeScaleRatio(); */
+  --size-scale-ratio: env(--size-scale-ratio);
+
+  --size-lock-screen-min: env(--size-lock-screen-min);
+  --size-lock-screen-max: env(--size-lock-screen-max);
+  /* TODO: does not work */
+  /* --fluid-min-screen-px: 400;
+    --fluid-min-screen: calc(var(--fluid-min-screen-px) / var(--size-base-px));
+    --fluid-max-screen-px: 600;
+    --fluid-max-screen: calc(var(--fluid-max-screen-px) / (var(--size-base-max) * var(--size-base-px))); */
 }
 
 @custom-selector :--h1 h1, h1 *, .h1, .h1 *;
@@ -35,7 +45,7 @@
 @custom-selector :--em em, .em;
 
 /* :--headings {
-  color: color(color, orange);
+  color: env(--main-color) !important;
 } */
 
 /* @mixin border; */
