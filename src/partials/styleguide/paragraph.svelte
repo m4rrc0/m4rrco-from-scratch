@@ -10,7 +10,7 @@
   Jumping
   <code>over the fence</code>
   is such a
-  <a href="#">bad habit</a>
+  <a href="#0">bad habit</a>
   for a rabbit. It's like jumping over a
   <code>{'<hr />'}</code>
   disregarding its

@@ -49,6 +49,18 @@ body,
   column-rule-color: var(--color-column-rule, currentcolor);
 }
 
+body *,
+*[class*='color-palette-'] * {
+  color: inherit;
+  /* background-color: inherit; */
+  border-color: inherit;
+  outline-color: inherit;
+  text-decoration-color: inherit;
+  text-emphasis-color: inherit;
+  caret-color: inherit;
+  column-rule-color: inherit;
+}
+
 *::selection,
 *[class^='color-palette-']::selection,
 *[class^='color-palette-'] *::selection {

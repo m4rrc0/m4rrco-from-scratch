@@ -189,7 +189,7 @@
 </SEO>
 
 <div id="template-global">
-  <nav class="cluster">
+  <nav class="cluster color-palette-variation-contrast">
     <div>
       <a href="/">Home</a>
       <a href="/blog/">Blog</a>
@@ -210,6 +210,6 @@
   }
   nav {
     --gap: var(--size-h6);
-    margin: var(--gap) 0;
+    /* margin: var(--gap) 0; */
   }
 </style>

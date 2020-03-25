@@ -88,6 +88,7 @@ body {
 
 .size-context-aside {
   --gap-xl: var(--size-h5);
+  --gap-s: var(--size-s2);
 }
 
 /* 3. ------------------------------------
@@ -171,16 +172,31 @@ body,
       --size-h8: calc(var(--size-h8-min) * 1rem);
     }
   }
+
+  /* --lh-h0: calc(var(--size-h0) * 1.45);
+  --lh-h1: calc(var(--size-h1) * 1.45);
+  --lh-h2: calc(var(--size-h2) * 1.45);
+  --lh-h3: calc(var(--size-h3) * 1.45);
+  --lh-h4: calc(var(--size-h4) * 1.45);
+  --lh-p: calc(var(--size-p) * 1.45);
+  --lh-h5: calc(var(--size-h5) * 1.45);
+  --lh-h6: calc(var(--size-h6) * 1.45);
+  --lh-h7: calc(var(--size-h7) * 1.45);
+  --lh-h8: calc(var(--size-h8) * 1.45); */
 }
 
 /* 4. ------------------------------------
-  Assign the appropriate size to reusable vars for margins, paddings, ... */
+  Define context by assigning the appropriate sizes to reusable vars for margins, paddings, ... */
 /* TODO: what vars do we need throughout the app? Isn't --size-h1 -> --size-h8 enough and more declarative? */
 body,
 *[class*='size-context-'] {
-  --gap-relative: 0.618em;
+  /* should have multiple widths (max, measure, aside, min, 0, ?) */
+  /* gap is for margins and paddings */
+  --gap-relative-s: 0.618em;
+  --gap-relative-m: 1em;
+  --gap-relative-l: 1.618em;
 
-  --gap-xxs: var(--size-h8);
+  --gap-xxs: var(--size-h7);
   --gap-xs: var(--size-h6);
   --gap-s: var(--size-h5);
   --gap-m: var(--size-h4);
@@ -204,63 +220,88 @@ body,
 
   --measure: var(--measure-text);
 
-  --size-border-l: var(--size-h8);
+  /* Border widths */
+  --size-border-0: 0;
+  --size-border-s: 1px;
+  --size-border-m: var(--size-h8);
+  --size-border-l: var(--size-h6);
+  /* default */
+  --size-border: var(--size-border-m);
+
+  /* Gutters = lateral paddings */
+  --size-gutters-0: 0;
+  --size-gutters-s: var(--size-h8);
+  --size-gutters-m: var(--size-p);
+  --size-gutters-l: var(--size-h3);
+  /* default */
+  --size-gutters: var(--size-gutters-m);
+
+  --width-column: calc(var(--measure) / 4);
 }
 
 /* 5. ------------------------------------
 utility classes to make it easier to apply font-sizes or other dimensions inside a size context */
 
-*,
-.size-h4,
-.h4,
-.size-p,
-.p {
+/* prettier-ignore */
+*, .size-h4, .h4, .size-p, .p {
   font-size: 1rem;
   font-size: var(--size-h4, 1rem);
 }
-
-h1,
-h1 *,
-.size-h1,
-.h1 {
+/* prettier-ignore */
+h1, h1 *, .size-h1, .h1 {
   font-size: 2rem;
   font-size: var(--size-h1, 2rem);
 }
-
-h2,
-h2 *,
-.size-h2,
-.h2 {
+/* prettier-ignore */
+h2, h2 *, .size-h2, .h2 {
   font-size: 1.8rem;
   font-size: var(--size-h2, 1.8rem);
 }
-
-h3,
-h3 *,
-.size-h3,
-.h3 {
+/* prettier-ignore */
+h3, h3 *, .size-h3, .h3 {
   font-size: 1.5rem;
   font-size: var(--size-h3, 1.5rem);
 }
-
-h5,
-h5 *,
-.size-h5,
-.h5 {
+/* prettier-ignore */
+h5, h5 *, .size-h5, .h5 {
   font-size: 0.9rem;
   font-size: var(--size-h5, 0.9rem);
 }
-
-h6,
-h6 *,
-.size-h6,
-.h6 {
+/* prettier-ignore */
+h6, h6 *, .size-h6, .h6 {
   font-size: 0.8rem;
   font-size: var(--size-h6, 0.8rem);
 }
-
-:root {
-  line-height: 1.4;
-  /* margin-bottom: 0; */
-  /* margin-top: 0; */
+/* prettier-ignore */
+.size-h7, .h7 {
+  font-size: 0.7rem;
+  font-size: var(--size-h7, 0.7rem);
 }
+/* prettier-ignore */
+.size-h8, .h8 {
+  font-size: 0.6rem;
+  font-size: var(--size-h8, 0.6rem);
+}
+
+/* --- BORDERS Sub-contexts --- */ /* prettier-ignore */
+.size-border-0 { --size-border: 0; } /* prettier-ignore */
+.size-border-s { --size-border: var(--size-border-s); } /* prettier-ignore */
+.size-border-m { --size-border: var(--size-border-m); } /* prettier-ignore */
+.size-border-l { --size-border: var(--size-border-l); } /* prettier-ignore */
+/* --- GAP Sub-contexts --- */ /* prettier-ignore */
+.gap-0, .no-gap { --gap: 0; } /* prettier-ignore */
+.gap-h0 { --gap: var(--size-h0); } /* prettier-ignore */
+.gap-h1 { --gap: var(--size-h1); } /* prettier-ignore */
+.gap-h2 { --gap: var(--size-h2); } /* prettier-ignore */
+.gap-h3 { --gap: var(--size-h3); } /* prettier-ignore */
+.gap-p { --gap: var(--size-p); } /* prettier-ignore */
+.gap-h4 { --gap: var(--size-h4); } /* prettier-ignore */
+.gap-h5 { --gap: var(--size-h5); } /* prettier-ignore */
+.gap-h6 { --gap: var(--size-h6); } /* prettier-ignore */
+.gap-h7 { --gap: var(--size-h7); } /* prettier-ignore */
+.gap-h8 { --gap: var(--size-h8); } /* prettier-ignore */
+/* Utility classes */ /* prettier-ignore */
+.border-0, .no-border { border: none; } /* prettier-ignore */
+.border-s { border: var(--size-border-s)} /* prettier-ignore */
+.border-m { border: var(--size-border-m)} /* prettier-ignore */
+.border-l { border: var(--size-border-l)} /* prettier-ignore */

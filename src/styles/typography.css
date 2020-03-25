@@ -70,3 +70,11 @@ html {
   --slnt: -10;
   --ital: 1;
 }
+
+/* LINE HEIGHT */
+body {
+  line-height: 1.45;
+}
+/* :--headings {
+  line-height: 1.3;
+} */

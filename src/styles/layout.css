@@ -2,9 +2,10 @@
 /*
 gap: var dimension
 recursive: class bool
-split-after: class + var bool + int
-(impossible without JS) split-type: var <element> // To avoid ":nth-child" and be able to use ":nth-of-type" // Triggered with .split-after class
-horizontal: class bool
+split-after: class int
+NEW: (impossible without JS) split-type: var <element> // To avoid ":nth-child" and be able to use ":nth-of-type" // Triggered with .split-after class
+NEW: horizontal: class bool
+NEW: stop: class bool -> apply `class="stack recursive stop"` to stop recursion down this path
 */
 .stack {
   /* --gap: 0.618em; */
@@ -41,11 +42,77 @@ horizontal: class bool
   height: 100%;
 }
 /* NOTE: could be better to just set margin-bottom: auto; inline on the element */
-.stack.split-after-1:not(.horizontal) > :nth-child(1) {
-  margin-bottom: auto;
+/* TODO: Could use a mixin */
+/* prettier-ignore */
+.stack:not(.horizontal).split-after-1 > :nth-child(1) { margin-bottom: auto; } /* prettier-ignore */
+.stack.horizontal.split-after-1 > :nth-child(1) { margin-right: auto; } /* prettier-ignore */
+.stack:not(.horizontal).split-after-2 > :nth-child(2) { margin-bottom: auto; } /* prettier-ignore */
+.stack.horizontal.split-after-2 > :nth-child(2) { margin-right: auto; } /* prettier-ignore */
+.stack:not(.horizontal).split-after-3 > :nth-child(3) { margin-bottom: auto; } /* prettier-ignore */
+.stack.horizontal.split-after-3 > :nth-child(3) { margin-right: auto; } /* prettier-ignore */
+.stack:not(.horizontal).split-after-4 > :nth-child(4) { margin-bottom: auto; } /* prettier-ignore */
+.stack.horizontal.split-after-4 > :nth-child(4) { margin-right: auto; } /* prettier-ignore */
+.stack:not(.horizontal).split-after-5 > :nth-child(5) { margin-bottom: auto; } /* prettier-ignore */
+.stack.horizontal.split-after-5 > :nth-child(5) { margin-right: auto; } /* prettier-ignore */
+/* --- ... --- */
+
+.stack:not(.horizontal).recursive.stop * + *,
+.stack.horizontal.recursive.stop * + * {
+  margin-top: 0;
+  margin-left: 0;
 }
-.stack.horizontal.split-after-1 > :nth-child(1) {
+
+/* -------- BOX ------------ */
+/*
+padding: var dimension
+size-border: var dimension
+border: var full declaration
+REMOVED ~~color-light~~
+REMOVED ~~color-dark~~
+*/
+.box {
+  padding: var(--padding);
+  border: 1px solid;
+  border: var(--size-border, 1px) solid;
+  /* border: var(--border); */
+}
+.box.no-border,
+.box.border-0 {
+  border: none;
+  /* For high contrast mode if no border */
+  outline: var(--size-border) solid transparent;
+  outline-offset: calc(var(--size-border) * -1);
+}
+
+/* -------- CENTER ------------ */
+/*
+max-width: var dimension
+text-center: class bool
+gutters: class bool + var dimension
+intrinsic: class bool
+*/
+.center {
+  display: block; /* NEW */
+  box-sizing: content-box;
+  margin-left: auto;
   margin-right: auto;
+  max-width: var(--measure, 38rem);
+  max-width: var(--max-width);
+}
+.center.text {
+  text-align: center;
+}
+/* .center.gutters-s {} */
+/* .center.gutters, .center.gutters-m {} */
+.center.gutters,
+.center[class*='gutters-'] {
+  padding-left: var(--gutters);
+  padding-right: var(--gutters);
+}
+.center.intrinsic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* -------- CLUSTER ------------ */
@@ -53,7 +120,7 @@ horizontal: class bool
 gap: var dimension
 justifyContent: var + class
 alignItems: var + class
-alignContent: var + class
+NEW: alignContent: var + class
 */
 .cluster {
   overflow: hidden;
@@ -72,140 +139,119 @@ alignContent: var + class
 .cluster > * > * {
   margin: calc(var(--gap) / 2);
 }
-/* prettier-ignore */
-.cluster.justify-stretch > * { justify-content: stretch; } /* prettier-ignore */
-.cluster.justify-center > * { justify-content: center; } /* prettier-ignore */
-.cluster.justify-start > * { justify-content: flex-start; } /* prettier-ignore */
-.cluster.justify-end > * { justify-content: flex-end; } /* prettier-ignore */
-.cluster.justify-space-between > * { justify-content: space-between; } /* prettier-ignore */
-.cluster.justify-space-around > * { justify-content: space-around; } /* prettier-ignore */
-.cluster.justify-space-evenly > * { justify-content: space-around; justify-content: space-evenly; } /* prettier-ignore */
-.cluster.align-items-stretch > * { align-items: stretch; } /* prettier-ignore */
-.cluster.align-items-center > * { align-items: center; } /* prettier-ignore */
-.cluster.align-items-start > * { align-items: flex-start; } /* prettier-ignore */
-.cluster.align-items-end > * { align-items: flex-end; } /* prettier-ignore */
-.cluster.align-content-baseline > * { align-content: baseline; } /* prettier-ignore */
-.cluster.align-content-center > * { align-content: center; } /* prettier-ignore */
-.cluster.align-content-start > * { align-content: flex-start; } /* prettier-ignore */
-.cluster.align-content-end > * { align-content: flex-end; } /* prettier-ignore */
-.cluster.align-content-space-between > * { align-content: space-between; } /* prettier-ignore */
-.cluster.align-content-space-around > * { align-content: space-around; } /* prettier-ignore */
-.cluster.align-content-space-evenly > * { align-content: space-around; align-content: space-evenly; } /* prettier-ignore */
-.cluster.align-content-stretch > * { align-content: stretch; } /* prettier-ignore */
 
-/* TODO: reel for <pre> */
-/* 
-// TODO: Javascript observer for scrollbar ?
-  // TODO: ? implement background attachment local for affordance. http://lea.verou.me/2012/04/background-attachment-local/
-  reel: ({
-    itemWidth = 'auto', // The width of each child element
-    height = 'auto', // The height of the parent (Reel) element
-    space = ['1rem', 'var(--s0, 1rem)'], // The space between each child element, and between the child elements and the scrollbar
-    noBar = false, // Whether to display the scrollbar
-    trackColor = 'currentcolor',
-    thumbColor = 'white',
-    noJS = false, // Wether the observer has been setup to manage the "overflowing" classname
-  } = {}) => {
-    const g = groupTwoParams(thumbColor, trackColor)
+/* -------- SIDEBAR ------------ */
+/* -------- SWITCHER ------------ */
+/* -------- COVER ------------ */
 
-    return {
-      display: 'flex',
-      height,
-      overflowX: 'auto',
-      overflowY: 'hidden',
-      ...(noBar && {
-        scrollbarWidth: 'none',
-      }),
+/*
+gap: var dimension
+width-column: var dimension -> minimum col width (or flex-basis if in flex mode)
+NEW: force: class bool
 
-      [`& > ${star}`]: {
-        // flex: mapIfArray(itemWidth, iw => `0 0 ${iw}`),
-        flex: '0 0',
-        flexBasis: itemWidth,
-      },
-      '& > img, & > .img, & > .image': {
-        height: '100%',
-        flexBasis: 'auto',
-        width: 'auto',
-      },
-      [`& > ${star} + ${star}`]: {
-        marginLeft: space,
-      },
+NEW: flex: class bool
+NEW: flex-basis: var dimension (if .flex)
+NEW: justify-content: var keyword
+NEW: flex-grow: var number
 
-      [noJS ? '&' : '&.overflowing']: {
-        // if we setup the observer, className will change
-        ...(!noBar && {
-          paddingBottom: space,
-        }),
-      },
+Possible behaviors:
+  - no grid and no flex supported: TODO: fallback with 100% width divs
+  - use flexbox type grid IF
+      - we didn't set the class .no-flex or .force AND
+      - grid is not supported OR
+      - we chose it with the .flex class
+  - use grid IF
+      - we didn't set the class .flex AND
+      - it is supported
 
-      '&::-webkit-scrollbar': {
-        height: '1rem',
-        ...(noBar && {
-          display: 'none',
-        }),
-      },
+Default: using only the class .grid will progressively enhance by default from basic divs to grid with min(max())
+Remark: if we have very small columns (and only then!!), consider using the class .force which will force the column width even if min(max()) is not supported
+*/
+/* NOTE: ultimate fallback with divs and limited widths */
+/* TODO */
+/* NOTE: grid with flexbox IF grid is not supported by the browser OR we chose it with the .flex class */
+@supports (not (display: grid)) and (display: flex) {
+  .grid:not(.no-flex):not(.force) {
+    overflow: hidden;
+  }
+  .grid:not(.no-flex):not(.force) > * {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: var(--justify-content, baseline); /* NOTE: interesting? */
+    margin: calc(var(--gap, 1rem) / 2 * -1);
+  }
+  .grid:not(.no-flex):not(.force) > * > * {
+    flex: 1 1;
+    flex-grow: 1;
+    flex-grow: var(--flex-grow, 1); /* TODO: interesting? */
+    flex-basis: var(--flex-basis, var(--width-column, 10rem));
+    /* TODO: interesting? can be useful to limit width of elements when less elements on the last row */
+    /* max-width: calc(var(--flex-basis, var(--width-column, 10rem)) * 2); */
+    margin: calc(var(--gap, 1rem) / 2);
+  }
+}
+@supports (display: flex) {
+  .grid:not(.no-flex):not(.force).flex {
+    overflow: hidden;
+  }
+  .grid:not(.no-flex):not(.force).flex > * {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: var(--justify-content, baseline); /* NOTE: interesting? */
+    margin: calc(var(--gap, 1rem) / 2 * -1);
+  }
+  .grid:not(.no-flex):not(.force).flex > * > * {
+    flex: 1 1;
+    flex-grow: 1;
+    flex-grow: var(--flex-grow, 1); /* TODO: interesting? */
+    flex-basis: var(--flex-basis, var(--width-column, 10rem));
+    /* TODO: interesting? can be useful to limit width of elements when less elements on the last row */
+    /* max-width: calc(var(--flex-basis, var(--width-column, 10rem)) * 2); */
+    margin: calc(var(--gap, 1rem) / 2);
+  }
+}
+/* NOTE: if supports display:grid -> fallback to columns of 100% width. At least we have the vertical gap */
+@supports (display: grid) {
+  /* TODO: selector for .grid must exclude the classname 'flex' */
+  .grid:not(.flex) {
+    display: contents; /* we use this so that a .grid always has an intermediate wrapper (.flex or not) */
+  }
+  .grid:not(.flex) > * {
+    display: grid;
+    grid-gap: var(--gap, 1rem);
+    align-content: start; /* NEW */
+    grid-template-columns: 100%;
+  }
+  /* NOTE: we can decide to apply display:grid without the min() or observer fct if we know
+we have very narrow columns smaller than any screen we want to support */
+  .grid:not(.flex).force > * {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--width-column, 10rem), 1fr)
+    );
+  }
+  /* NOTE: this depends on the JS observer function and we don't want JS. I prefer
+  falling back to flexbox or even simple 100% width div */
+  /* .grid > .aboveMin {
+    grid-template-columns: repeat(auto-fill, minmax(var(--width-column, 10rem), 1fr));
+  } */
+}
+/* NOTE: the min() function has limited support but allows this to work without JS */
+@supports (display: grid) and (width: min(20rem, 100%)) {
+  .grid:not(.flex) > * {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(var(--width-column, 10rem), 100%), 1fr)
+    );
+  }
+}
 
-      scrollbarColor: mapIfArray(g, o => `${o.main} ${o.second}`),
-      '&::-webkit-scrollbar-track': {
-        backgroundColor: trackColor,
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: trackColor,
-        backgroundImage: mapIfArray(
-          g,
-          o =>
-            `linear-gradient(${o.second} 0, ${o.second} 0.25rem, ${o.main} 0.25rem, ${o.main} 0.75rem, ${o.second} 0.75rem)`
-        ),
-      },
-    }
-  }, */
+/* -------- FRAME ------------ */
+/* -------- REEL ------------ */
+/* -------- IMPOSTER ------------ */
 
 /* TODO: the rest */
-/* box: ({
-    padding = ['1rem', 'var(--s0, 1rem)'], // The amount by with the Box is padded on all sides
-    borderWidth = '0', // The width of the (solid) border. If empty or 0, the transparent outline is instated for high contrast mode
-  } = {}) => ({
-    display: 'block',
-    padding,
-    borderWidth,
-    borderStyle: 'solid',
-    // color: "var(--color-dark)",
-    // backgroundColor: "var(--color-light)",
-    ...(!borderWidth && {
-      /* ↓ For high contrast mode
-      outline: mapIfArray(borderWidth, bw => `${bw} solid transparent`),
-      outlineOffset: mapIfArray(borderWidth, bw => `calc(${bw} * -1)`),
-    }),
-
-    // " *": {
-    //   color: "inherit",
-    // },
-  }),
-
-  center: ({
-    maxWidth = ['65ch', 'var(--measure, 65ch)'], // The maximum width of the centered element
-    andText = false, // Whether to apply text-align: center too
-    gutters = 0, // The minimum space on either side of the content
-    intrinsic = false, // Center child elements based on their content width. e.g. center a button
-  }) => ({
-    display: 'block',
-    boxSizing: 'content-box',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    maxWidth,
-    ...(andText && { textAlign: 'center' }),
-    ...(gutters && {
-      paddingLeft: gutters,
-      paddingRight: gutters,
-    }),
-    ...(intrinsic && {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }),
-  }),
-
-
+/* 
   sidebar: ({
     side = 'left', // Whether the sidebar element is the :last-child or :first-child
     sideWidth = null, // The width of the sidebar (empty means not set; defaults to the content width)
@@ -295,62 +341,6 @@ alignContent: var + class
     },
   }),
 
-  grid: ({
-    min = '250px', // A CSS length value representing x in minmax(min(x, 100%), 1fr)
-    space = ['1rem', 'var(--s0, 1rem)'], // The space (grid-gap) between the grid children / cells
-    applyAnyway = false,
-    useFlexbox = false,
-    flexBasis = null,
-    flexGrow,
-    justifyContent,
-  } = {}) => {
-    const gtc = {
-      gridTemplateColumns: mapIfArray(
-        min,
-        m => `repeat(auto-fill, minmax(${m}, 1fr))`
-      ),
-    }
-
-    return useFlexbox
-      ? {
-          overflow: 'hidden',
-          [`> ${star}`]: {
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: justifyContent || 'baseline', // NOTE: interesting?
-            margin: mapIfArray(space, s => `calc(${s} / 2 * -1)`),
-            [`> ${star}`]: {
-              flex: `1 1`,
-              flexGrow: typeof flexGrow !== 'undefined' ? flexGrow : 1, // NOTE: interesting?
-              flexBasis: flexBasis || min,
-              // maxWidth: `calc(${flexBasis || min} * 2)`, // NOTE: interesting?
-              margin: mapIfArray(space, s => `calc(${s} / 2)`),
-            },
-          },
-        }
-      : {
-          display: 'contents',
-          [`> ${star}`]: {
-            display: 'grid',
-            gridGap: space,
-            alignContent: 'start',
-            gridTemplateColumns: '100%',
-            '&.aboveMin': {
-              // TODO: this depends on the observer function
-              ...gtc,
-            },
-            // BEST CASE SCENARIO
-            // the min() function has limited support but allows this to work without JS
-            [`@supports (width: min(${min[0] || min}, 100%))`]: {
-              gridTemplateColumns: mapIfArray(
-                min,
-                m => `repeat(auto-fit, minmax(min(${m}, 100%), 1fr))`
-              ),
-            },
-            ...(applyAnyway && gtc),
-          },
-        }
-  },
 
   frame: ({
     ratio = '16/9', // The element's aspect ratio
@@ -411,3 +401,92 @@ alignContent: var + class
       height: '100%',
     },
   }), */
+
+/* TODO: reel for <pre> */
+/* 
+// TODO: Javascript observer for scrollbar ?
+  // TODO: ? implement background attachment local for affordance. http://lea.verou.me/2012/04/background-attachment-local/
+  reel: ({
+    itemWidth = 'auto', // The width of each child element
+    height = 'auto', // The height of the parent (Reel) element
+    space = ['1rem', 'var(--s0, 1rem)'], // The space between each child element, and between the child elements and the scrollbar
+    noBar = false, // Whether to display the scrollbar
+    trackColor = 'currentcolor',
+    thumbColor = 'white',
+    noJS = false, // Wether the observer has been setup to manage the "overflowing" classname
+  } = {}) => {
+    const g = groupTwoParams(thumbColor, trackColor)
+
+    return {
+      display: 'flex',
+      height,
+      overflowX: 'auto',
+      overflowY: 'hidden',
+      ...(noBar && {
+        scrollbarWidth: 'none',
+      }),
+
+      [`& > ${star}`]: {
+        // flex: mapIfArray(itemWidth, iw => `0 0 ${iw}`),
+        flex: '0 0',
+        flexBasis: itemWidth,
+      },
+      '& > img, & > .img, & > .image': {
+        height: '100%',
+        flexBasis: 'auto',
+        width: 'auto',
+      },
+      [`& > ${star} + ${star}`]: {
+        marginLeft: space,
+      },
+
+      [noJS ? '&' : '&.overflowing']: {
+        // if we setup the observer, className will change
+        ...(!noBar && {
+          paddingBottom: space,
+        }),
+      },
+
+      '&::-webkit-scrollbar': {
+        height: '1rem',
+        ...(noBar && {
+          display: 'none',
+        }),
+      },
+
+      scrollbarColor: mapIfArray(g, o => `${o.main} ${o.second}`),
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: trackColor,
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: trackColor,
+        backgroundImage: mapIfArray(
+          g,
+          o =>
+            `linear-gradient(${o.second} 0, ${o.second} 0.25rem, ${o.main} 0.25rem, ${o.main} 0.75rem, ${o.second} 0.75rem)`
+        ),
+      },
+    }
+  }, */
+
+/* -------- UTILITY-HELPERS ------------ */
+/* because ppl seem to like "functional css" */ /* prettier-ignore */
+.justify-stretch, .justify-content-stretch { --justify-content: stretch; } /* prettier-ignore */
+.justify-center, .justify-content-center { --justify-content: center; } /* prettier-ignore */
+.justify-start, .justify-content-start { --justify-content: flex-start; } /* prettier-ignore */
+.justify-end, .justify-content-end { --justify-content: flex-end; } /* prettier-ignore */
+.justify-space-between, .justify-content-space-between { --justify-content: space-between; } /* prettier-ignore */
+.justify-space-around, .justify-content-space-around { --justify-content: space-around; } /* prettier-ignore */
+.justify-space-evenly, .justify-content-space-evenly { --justify-content: space-around; justify-content: space-evenly; } /* prettier-ignore */
+.align-items-stretch { --align-items: stretch; } /* prettier-ignore */
+.align-items-center { --align-items: center; } /* prettier-ignore */
+.align-items-start { --align-items: flex-start; } /* prettier-ignore */
+.align-items-end { --align-items: flex-end; } /* prettier-ignore */
+.align-content-baseline { --align-content: baseline; } /* prettier-ignore */
+.align-content-center { --align-content: center; } /* prettier-ignore */
+.align-content-start { --align-content: flex-start; } /* prettier-ignore */
+.align-content-end { --align-content: flex-end; } /* prettier-ignore */
+.align-content-space-between { --align-content: space-between; } /* prettier-ignore */
+.align-content-space-around { --align-content: space-around; } /* prettier-ignore */
+.align-content-space-evenly { --align-content: space-around; align-content: space-evenly; } /* prettier-ignore */
+.align-content-stretch { --align-content: stretch; } /* prettier-ignore */

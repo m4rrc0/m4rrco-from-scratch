@@ -40,8 +40,8 @@
 @custom-selector :--h6 h6, h6 *, .h6, .h6 *;
 @custom-selector :--headings :--h1, :--h2, :--h3, :--h4, :--h5, :--h6;
 @custom-selector :--code tt, code, kbd, pre, samp;
-@custom-selector :--bold strong, .strong, b, .b, .bold;
-@custom-selector :--strong :--bold;
+@custom-selector :--strong strong, .strong, b, .b, .bold;
+@custom-selector :--bold :--strong;
 @custom-selector :--em em, .em;
 
 /* :--headings {

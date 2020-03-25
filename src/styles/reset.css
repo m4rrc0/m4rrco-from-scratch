@@ -75,5 +75,5 @@ hr {
   width: 100%;
 }
 pre {
-  overflow: scroll;
+  overflow-x: scroll;
 }
