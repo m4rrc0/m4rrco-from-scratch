@@ -1,9 +1,18 @@
 <script>
   import Template from '../../templates/index';
+  import SEO from '../../templates/SEO';
   import Paragraph from '../../partials/styleguide/paragraph';
 
   let list6 = [1, 2, 3, 4, 5, 6];
 </script>
+
+<SEO
+  lang="en"
+  ogType="website"
+  siteName="m4rr.co"
+  title="Styleguide"
+  description="A (soon to be) extensive style guide using nuds libraries"
+  canonicalUrl="https://www.m4rr.co/styleguide/" />
 
 <Template>
   <div class="stack" style="--gap: 1em">
