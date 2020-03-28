@@ -1,0 +1,82 @@
+{
+  "_from": "svelte-image",
+  "_id": "svelte-image@0.1.9",
+  "_inBundle": false,
+  "_integrity": "sha512-Qps24P6snwM/7Q8zBzG+ka7KmvyRByo3bxLt4/ewb/eUbhEzz1myQyjyDJ+NkUw/tM9lJSVgAIJz2GvnJRAxQA==",
+  "_location": "/svelte-image",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "svelte-image",
+    "name": "svelte-image",
+    "escapedName": "svelte-image",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/svelte-image/-/svelte-image-0.1.9.tgz",
+  "_shasum": "6b1dc1271827d07b625ff1b7907890a1fa12726a",
+  "_spec": "svelte-image",
+  "_where": "/home/marcoet/code/m4rrco/m4rrco-from-scratch",
+  "author": {
+    "name": "Maxim Matyunin"
+  },
+  "bugs": {
+    "url": "https://github.com/matyunya/svelte-image/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "potrace": "^2.1.2",
+    "sharp": "^0.23.4",
+    "svelte": "^3.12.1",
+    "svelte-waypoint": "^0.1.4",
+    "svgo": "^1.2.2"
+  },
+  "deprecated": false,
+  "description": "Image processing with sharp for Svelte",
+  "devDependencies": {
+    "@types/inquirer": "^6.5.0",
+    "@types/jest": "^24.0.20",
+    "@types/node": "^12.7.2",
+    "@types/semver": "^6.0.1",
+    "del": "^5.1.0",
+    "eslint": "^6.0.1",
+    "inquirer": "^7.0.0",
+    "jest": "^24.9.0",
+    "runscript": "^1.4.0",
+    "semver": "^6.3.0",
+    "simple-git": "^1.124.0",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.6.2"
+  },
+  "files": [
+    "src/index.js",
+    "src/Image.svelte",
+    "src/main.js"
+  ],
+  "homepage": "https://github.com/matyunya/svelte-image#readme",
+  "keywords": [
+    "svelte",
+    "sharp",
+    "image",
+    "processing"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "name": "svelte-image",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matyunya/svelte-image.git"
+  },
+  "scripts": {
+    "release": "ts-node --project node-scripts/tsconfig.json node-scripts/release.ts",
+    "test": "jest --run-in-band"
+  },
+  "svelte": "src/Image.svelte",
+  "version": "0.1.9"
+}

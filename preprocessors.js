@@ -1,5 +1,7 @@
-import * as path from 'path'
-import { mdsvex } from 'mdsvex'
+// import * as path from 'path'
+import { mdsvex } from 'mdsvex';
+// import image from 'svelte-image';
+import image from './src/svelte-image';
 
 // const autoPreprocess = require('svelte-preprocess');
 
@@ -16,6 +18,18 @@ module.exports = [
     //   highlight: (str, lang) => whatever(str, lang), // this should be a real function if you want to highlight
     // },
   }),
+  image({
+    outputDir: '/dist',
+    placeholder: 'trace',
+    // placeholder: 'blur',
+    // Potrace options for SVG placeholder
+    trace: {
+      background: '#fff',
+      // color: "#002fa7",
+      color: '#000',
+      threshold: 120,
+    },
+  }),
   // autoPreprocess({
   //     typescript: {
   //         compilerOptions: {
@@ -25,4 +39,4 @@ module.exports = [
   //         transpileOnly: true,
   //     },
   // }),
-]
+];

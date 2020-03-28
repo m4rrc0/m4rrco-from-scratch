@@ -8,6 +8,8 @@ NEW: horizontal: class bool
 NEW: stop: class bool -> apply `class="stack recursive stop"` to stop recursion down this path
 */
 .stack {
+  /* --gap-stack: var(--gap); */
+
   /* --gap: 0.618em; */
   /* --gap: var(--gap-relative, 0.618em); */
   display: flex;
@@ -87,6 +89,7 @@ REMOVED ~~color-dark~~
 /* -------- CENTER ------------ */
 /*
 max-width: var dimension
+NEW: max: class bool
 text-center: class bool
 gutters: class bool + var dimension
 intrinsic: class bool
@@ -96,8 +99,10 @@ intrinsic: class bool
   box-sizing: content-box;
   margin-left: auto;
   margin-right: auto;
-  max-width: var(--measure, 38rem);
-  max-width: var(--max-width);
+  max-width: var(--max-width, var(--measure, 38rem));
+}
+.center.max {
+  width: var(--max-width, var(--measure, 38rem));
 }
 .center.text {
   text-align: center;
@@ -118,14 +123,27 @@ intrinsic: class bool
 /* -------- CLUSTER ------------ */
 /*
 gap: var dimension
-justifyContent: var + class
-alignItems: var + class
-NEW: alignContent: var + class
+justify-content: var keyword
+align-items: var keyword
+NEW: align-content: var keyword
+NEW: overflow: class
 */
 .cluster {
+  /* --gap-cluster: var(--gap); */
   overflow: hidden;
 }
-.cluster > * {
+/* focus style is hidden if we don't allow overflow */
+/* we can use this if there are outer margins to our cluster > than the inner margins between elements */
+/* TODO: we could try and find a better way to know if we can overflew */
+.cluster:not(.overflow) *:focus {
+  outline: 1px solid;
+  outline-offset: -1px;
+}
+.cluster.overflow {
+  overflow: visible;
+}
+.cluster > *,
+.cluster > *[class] {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -140,10 +158,109 @@ NEW: alignContent: var + class
   margin: calc(var(--gap) / 2);
 }
 
-/* -------- SIDEBAR ------------ */
-/* -------- SWITCHER ------------ */
-/* -------- COVER ------------ */
+/* -------- WITH SIDEBAR ------------ */
+/*
+gap: var dimension
+no-stretch: class bool | Make the adjacent elements adopt their natural height (same as applying .align-items-start to " > * ")
+side-width: var dimension | The width of the sidebar (empty means not set; defaults to the content width)
+right: class bool | Whether the sidebar element is the :last-child or :first-child
+content-min var dimension(%) = 50% | The narrowest the content (main) element can be before wrapping. Should be a percentage.
+*/
+.with-sidebar {
+  overflow: hidden;
+}
+.with-sidebar > * {
+  display: flex;
+  flex-wrap: wrap;
+  margin: calc(var(--gap) / 2 * -1);
+}
+.with-sidebar.no-stretch > * {
+  align-items: 'flex-start';
+}
+.with-sidebar > * > * {
+  margin: calc(var(--gap) / 2);
+  flex-grow: 1;
+  flex-basis: var(
+    --side-width
+  ); /* TODO: check that it is ignored if the var is not assigned a value */
+}
+.with-sidebar:not(.right) > * > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: calc(var(--content-min, 50%) - var(--gap));
+}
+.with-sidebar.right > * > :first-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: calc(var(--content-min, 50%) - var(--gap));
+}
 
+/* -------- SWITCHER ------------ */
+/*
+gap: var dimension | The space (margin) between the (child) elements
+container-wrap: var dimension | The container width at which the component switches between a horizontal and vertical layout
+limit: class number | The maximum number of elements allowed to appear in the horizontal configuration
+*/
+.switcher {
+  display: block; /* NEW */
+}
+.switcher > * {
+  display: flex;
+  flex-wrap: wrap;
+  margin: calc((var(--gap) / 2) * -1);
+  overflow: hidden; /* NEW */
+}
+.switcher > * > * {
+  flex-grow: 1;
+  flex-basis: calc(
+    (var(--container-wrap, 20rem) - (100% - var(--gap))) * 999
+  ); /* TODO: is 20rem a good default? */
+  margin: calc(var(--gap) / 2);
+}
+/* TODO: do this with a mixin and/or function */
+/* prettier-ignore */
+.switcher.limit-2 > * > :nth-last-child(n+3), .switcher.limit-2 > * > :nth-last-child(n+3) ~ * { flex-basis: 100%; } /* prettier-ignore */
+/* let's set the default as 3 */ /* TODO: check if this default works */ /* prettier-ignore */
+.switcher:not([class*='limit-']) > * > :nth-last-child(n+4), .switcher:not([class*='limit-']) > * > :nth-last-child(n+4) ~ * { flex-basis: 100%; } /* prettier-ignore */
+.switcher.limit-3 > * > :nth-last-child(n+4), .switcher.limit-3 > * > :nth-last-child(n+4) ~ * { flex-basis: 100%; } /* prettier-ignore */
+.switcher.limit-4 > * > :nth-last-child(n+5), .switcher.limit-4 > * > :nth-last-child(n+5) ~ * { flex-basis: 100%; } /* prettier-ignore */
+.switcher.limit-5 > * > :nth-last-child(n+6), .switcher.limit-5 > * > :nth-last-child(n+6) ~ * { flex-basis: 100%; } /* prettier-ignore */
+.switcher.limit-6 > * > :nth-last-child(n+7), .switcher.limit-6 > * > :nth-last-child(n+7) ~ * { flex-basis: 100%; } /* prettier-ignore */
+.switcher.limit-7 > * > :nth-last-child(n+8), .switcher.limit-7 > * > :nth-last-child(n+8) ~ * { flex-basis: 100%; } /* prettier-ignore */
+.switcher.limit-8 > * > :nth-last-child(n+9), .switcher.limit-8 > * > :nth-last-child(n+9) ~ * { flex-basis: 100%; } /* prettier-ignore */
+
+/* -------- COVER ------------ */
+/*
+center-[selector] class | The element that should be towards the vertical center of the space. Identify with a simple selector like h2 or .centered
+NEW: place a ".centered" class on the child that needs centering
+gap: var dimension | The minimum space between and around the child elements
+min-height: var dimension (100vh) | The minimum height of the parent element, before it grows to accommodate its content
+no-padding: class bool  (false) | Whether to remove the padding from the parent element
+*/
+.cover {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: var(--min-height, 100vh);
+  padding: var(--gap);
+}
+.cover.no-padding {
+  padding: 0;
+}
+.cover > * {
+  margin-top: var(--gap);
+  margin-bottom: var(--gap);
+}
+/* prettier-ignore */
+.cover:not([class*="center-"]) > :first-child:not(.centered) { margin-top: 0; } /* prettier-ignore */
+.cover:not([class*="center-"]) > :last-child:not(.centered) { margin-bottom: 0; } /* prettier-ignore */
+.cover:not([class*="center-"]) > .centered { margin-top: auto; margin-bottom: auto; } /* prettier-ignore */
+/* TODO: do this with a mixin and/or function if we need it */ /*
+.cover.center-h1 > :first-child:not(h1) { margin-top: 0; } .cover.center-h1 > :last-child:not(h1) { margin-bottom: 0; } .cover.center-h1 > h1 { margin-top: auto; margin-bottom: auto; }
+.cover.center-h2 > :first-child:not(h2) { margin-top: 0; } .cover.center-h2 > :last-child:not(h2) { margin-bottom: 0; } .cover.center-h2 > h2 { margin-top: auto; margin-bottom: auto; }
+*/
+
+/* -------- GRID ------------ */
 /*
 gap: var dimension
 width-column: var dimension -> minimum col width (or flex-basis if in flex mode)
@@ -167,10 +284,13 @@ Possible behaviors:
 Default: using only the class .grid will progressively enhance by default from basic divs to grid with min(max())
 Remark: if we have very small columns (and only then!!), consider using the class .force which will force the column width even if min(max()) is not supported
 */
-/* NOTE: ultimate fallback with divs and limited widths */
-/* TODO */
+/* .grid {
+  --gap-grid: var(--gap);
+} */
+/* NOTE: ultimate fallback with divs and limited widths */ /* TODO */
 /* NOTE: grid with flexbox IF grid is not supported by the browser OR we chose it with the .flex class */
-@supports (not (display: grid)) and (display: flex) {
+@supports (not ((display: grid) and (width: min(20rem, 100%)))) and
+  (display: flex) {
   .grid:not(.no-flex):not(.force) {
     overflow: hidden;
   }
@@ -210,11 +330,10 @@ Remark: if we have very small columns (and only then!!), consider using the clas
     margin: calc(var(--gap, 1rem) / 2);
   }
 }
-/* NOTE: if supports display:grid -> fallback to columns of 100% width. At least we have the vertical gap */
-@supports (display: grid) {
-  /* TODO: selector for .grid must exclude the classname 'flex' */
+@supports (display: grid) and (width: min(20rem, 100%)) {
   .grid:not(.flex) {
-    display: contents; /* we use this so that a .grid always has an intermediate wrapper (.flex or not) */
+    /* display: contents; /* we use this so that a .grid always has an intermediate wrapper (.flex or not) */
+    /* not ok because margins 'n stuff disapear too */
   }
   .grid:not(.flex) > * {
     display: grid;
@@ -222,22 +341,13 @@ Remark: if we have very small columns (and only then!!), consider using the clas
     align-content: start; /* NEW */
     grid-template-columns: 100%;
   }
-  /* NOTE: we can decide to apply display:grid without the min() or observer fct if we know
-we have very narrow columns smaller than any screen we want to support */
-  .grid:not(.flex).force > * {
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(var(--width-column, 10rem), 1fr)
-    );
-  }
-  /* NOTE: this depends on the JS observer function and we don't want JS. I prefer
-  falling back to flexbox or even simple 100% width div */
+  /* NOTE: this does not need the min() fct but depends on the JS observer and we don't want JS.
+  I prefer falling back to flexbox or even simple 100% width div */
   /* .grid > .aboveMin {
     grid-template-columns: repeat(auto-fill, minmax(var(--width-column, 10rem), 1fr));
   } */
-}
-/* NOTE: the min() function has limited support but allows this to work without JS */
-@supports (display: grid) and (width: min(20rem, 100%)) {
+
+  /* NOTE: the min() function has limited support but allows this to work without JS */
   .grid:not(.flex) > * {
     grid-template-columns: repeat(
       auto-fit,
@@ -245,229 +355,183 @@ we have very narrow columns smaller than any screen we want to support */
     );
   }
 }
+/* NOTE: we can decide to apply display:grid without the min() or observer fct if we know
+we have very narrow columns smaller than any screen we want to support */
+/* .grid:not(.flex).force {
+  display: contents;
+} */
+.grid:not(.flex).force > * {
+  display: grid;
+  grid-gap: var(--gap, 1rem);
+  align-content: start; /* NEW */
+  grid-template-columns: 100%;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--width-column, 10rem), 1fr)
+  );
+}
 
 /* -------- FRAME ------------ */
+/*
+NEW: aspect-ratio: var number or fraction (16/9) | The element's aspect ratio
+*/
+
+.frame {
+  /* --n: 9;
+  --d: 16;
+  padding-bottom: calc(var(--n) / var(--d) * 100%); */
+  display: block; /* NEW */
+  position: relative;
+  padding-bottom: calc(
+    100% / var(--aspect-ratio, 16/9)
+  ); /* NEW */ /* TODO: check if it works properly */
+}
+.frame > * {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.frame > img,
+.frame > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------- RATIO ------------ */ /* NEW */
+/* 
+aspect-ratio: var number or fraction (16/9) | The element's aspect ratio
+object-fit: var keyword (cover) | object-fit for images
+*/
+.ratio {
+  position: 'relative';
+}
+.ratio > img,
+.ratio > picture > img {
+  /* height: 'auto', */
+  height: 100%;
+  width: 100%;
+  object-fit: var(--object-fit, cover);
+}
+.ratio::before {
+  content: '';
+  display: block;
+  padding-bottom: calc(100% / var(--aspect-ratio, 16/9));
+}
+.ratio > :first-child {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+
 /* -------- REEL ------------ */
+/* 
+item-width: var dimension or keyword (auto) | The width of each child element
+height: var dimension or keyword (auto) | The height of the parent (Reel) element
+gap: var dimension | The space between each child element, and between the child elements and the scrollbar
+NEW: no-bar: class bool (false), // Whether to display the scrollbar
+track-color: var color (currentcolor)
+thumb-color: var color (white)
+NEW: no-js: class bool (false) | Wether the observer has been setup to manage the "overflowing" classname
+*/
+/* TODO: Javascript observer for scrollbar ? */
+/* TODO: ? implement background attachment local for affordance. http://lea.verou.me/2012/04/background-attachment-local/ */
+.reel {
+  display: flex;
+  height: var(--height, auto);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: var(--thumb-color) var(--track-color, currentcolor);
+}
+.reel.no-bar {
+  scrollbar-width: none;
+}
+.reel > * {
+  flex: 0 0 var(--item-width, auto);
+}
+.reel > img,
+.reel > .img,
+.reel > .image {
+  height: 100%;
+  flex-basis: auto;
+  width: auto;
+}
+.reel > * + * {
+  margin-left: var(--gap);
+}
+.reel.overflowing:not(.no-bar),
+.reel.no-js:not(.no-bar) {
+  padding-bottom: var(--gap);
+}
+
+/* TODO: NEW -> part of nuds-colors. should we set defaults and override in nuds-colors? */
+.reel::-webkit-scrollbar {
+  height: 1rem; /* NOTE: should it be --gap instead ? */
+}
+.reel.no-bar::-webkit-scrollbar {
+  display: none;
+}
+.reel::-webkit-scrollbar-track {
+  background-color: var(--track-color, currentcolor);
+}
+
+.reel::-webkit-scrollbar-thumb {
+  background-color: var(--track-color, currentcolor);
+  background-image: linear-gradient(
+    var(--track-color, currentcolor) 0,
+    var(--track-color, currentcolor) 0.25rem,
+    var(--thumb-color) 0.25rem,
+    var(--thumb-color) 0.75rem,
+    var(--track-color, currentcolor) 0.75rem
+  );
+}
+
 /* -------- IMPOSTER ------------ */
-
-/* TODO: the rest */
 /* 
-  sidebar: ({
-    side = 'left', // Whether the sidebar element is the :last-child or :first-child
-    sideWidth = null, // The width of the sidebar (empty means not set; defaults to the content width)
-    contentMin = '50%', // The narrowest the content (main) element can be before wrapping. Should be a percentage.
-    space = ['1rem', 'var(--s0, 1rem)'], // The space (margin) between the sidebar and non-sidebar
-    noStretch = false, // Make the adjacent elements adopt their natural height
-  } = {}) => {
-    // g is groupedArrayForMinWidth
-    const g = groupTwoParams(space, contentMin)
-
-    return {
-      overflow: 'hidden',
-      [`> ${star}`]: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        margin: mapIfArray(space, s => `calc(${s} / 2 * -1)`),
-        ...(noStretch && { alignItems: 'flex-start' }),
-      },
-      [`> ${star} > ${star}`]: {
-        margin: mapIfArray(space, s => `calc(${s} / 2)`),
-        flexGrow: 1,
-        ...(sideWidth && { flexBasis: sideWidth }),
-      },
-      [side === 'right'
-        ? `> ${star} > :first-child`
-        : `> ${star} > :last-child`]: {
-        flexBasis: 0,
-        flexGrow: 999,
-        // minWidth: `calc(${contentMin} - ${space})`,
-        minWidth: mapIfArray(g, o => `calc(${o.second} - ${o.main})`),
-      },
-    }
-  },
-
-  switcher: ({
-    treshold = ['30ch', 'calc(var(--measure, 65ch) / 2)'], // The container width at which the component switches between a horizontal and vertical layout
-    space = ['1rem', 'var(--s0, 1rem)'], // The space (margin) between the (child) elements
-    limit = 4, // The maximum number of elements allowed to appear in the horizontal configuration
-  } = {}) => {
-    const g = groupTwoParams(treshold, space)
-    return {
-      display: 'block',
-      [`> ${star}`]: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        overflow: 'hidden',
-        margin: mapIfArray(space, s => `calc(${s} / 2 * -1)`),
-      },
-      [`> ${star} > ${star}`]: {
-        flexBasis: mapIfArray(
-          g,
-          o => `calc((${o.main} - (100% - ${o.second})) * 999)`
-        ),
-        flexGrow: 1,
-        margin: mapIfArray(space, s => `calc(${s} / 2)`),
-      },
-      [`& > ${star} > :nth-last-child(n + ${limit +
-        1}), & > ${star} > :nth-last-child(n + ${limit + 1}) ~ ${star}`]: {
-        flexBasis: '100%',
-      },
-    }
-  },
-
-  cover: ({
-    centered = 'h1', // The element that should be towards the vertical center of the space. Identify with a simple selector like h2 or .centered
-    space = ['1rem', 'var(--s0, 1rem)'], // The minimum space between and around the child elements
-    minHeight = '100vh', // The minimum height of the parent element, before it grows to accommodate its content
-    noPad = false, // Whether to remove the padding from the parent element
-  } = {}) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight,
-    ...(!noPad && { padding: space }),
-    [`> ${star}`]: {
-      marginTop: space,
-      marginBottom: space,
-    },
-    [`> :first-child:not(${centered})`]: {
-      marginTop: 0,
-    },
-    [`> : last - child: not(${centered})`]: {
-      marginBottom: 0,
-    },
-    [`> ${centered}`]: {
-      marginTop: 'auto',
-      marginBottom: 'auto',
-    },
-  }),
-
-
-  frame: ({
-    ratio = '16/9', // The element's aspect ratio
-  } = {}) => {
-    return {
-      display: 'block',
-      position: 'relative',
-      paddingBottom: mapIfArray(ratio, r => {
-        const [num, den] = r.split('/')
-        return `calc(${den} / ${num} * 100%)`
-      }),
-      [`& > ${star}`]: {
-        overflow: 'hidden',
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      '& > img, & > video': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-      },
-    }
-  },
-
-  ratio: ({
-    ratio = '16/9', // The element's aspect ratio
-    fit = 'cover', // Object-fit for images
-  }) => ({
-    position: 'relative',
-    // '& > :first-child': {
-    //   width: '100%',
-    // },
-    '& > img, & > picture > img': {
-      // height: 'auto',
-      height: '100%',
-      width: '100%',
-      objectFit: fit,
-    },
-    '&::before': {
-      content: '""',
-      display: 'block',
-      paddingBottom: mapIfArray(ratio, r => {
-        const [num, den = 1] = `${r}`.split('/')
-        return `calc(100% / (${num} / ${den}))`
-      }),
-    },
-    '& > :first-child': {
-      width: '100%',
-      position: 'absolute',
-      top: '0',
-      left: '0',
-      height: '100%',
-    },
-  }), */
-
-/* TODO: reel for <pre> */
-/* 
-// TODO: Javascript observer for scrollbar ?
-  // TODO: ? implement background attachment local for affordance. http://lea.verou.me/2012/04/background-attachment-local/
-  reel: ({
-    itemWidth = 'auto', // The width of each child element
-    height = 'auto', // The height of the parent (Reel) element
-    space = ['1rem', 'var(--s0, 1rem)'], // The space between each child element, and between the child elements and the scrollbar
-    noBar = false, // Whether to display the scrollbar
-    trackColor = 'currentcolor',
-    thumbColor = 'white',
-    noJS = false, // Wether the observer has been setup to manage the "overflowing" classname
-  } = {}) => {
-    const g = groupTwoParams(thumbColor, trackColor)
-
-    return {
-      display: 'flex',
-      height,
-      overflowX: 'auto',
-      overflowY: 'hidden',
-      ...(noBar && {
-        scrollbarWidth: 'none',
-      }),
-
-      [`& > ${star}`]: {
-        // flex: mapIfArray(itemWidth, iw => `0 0 ${iw}`),
-        flex: '0 0',
-        flexBasis: itemWidth,
-      },
-      '& > img, & > .img, & > .image': {
-        height: '100%',
-        flexBasis: 'auto',
-        width: 'auto',
-      },
-      [`& > ${star} + ${star}`]: {
-        marginLeft: space,
-      },
-
-      [noJS ? '&' : '&.overflowing']: {
-        // if we setup the observer, className will change
-        ...(!noBar && {
-          paddingBottom: space,
-        }),
-      },
-
-      '&::-webkit-scrollbar': {
-        height: '1rem',
-        ...(noBar && {
-          display: 'none',
-        }),
-      },
-
-      scrollbarColor: mapIfArray(g, o => `${o.main} ${o.second}`),
-      '&::-webkit-scrollbar-track': {
-        backgroundColor: trackColor,
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: trackColor,
-        backgroundImage: mapIfArray(
-          g,
-          o =>
-            `linear-gradient(${o.second} 0, ${o.second} 0.25rem, ${o.main} 0.25rem, ${o.main} 0.75rem, ${o.second} 0.75rem)`
-        ),
-      },
-    }
-  }, */
+gap: var dimension
+fixed: class bool | to position the imposter relatve to the viewport
+NEW: position: var keyword | alternative positionning. overrides the .fixed class
+TODO: check if it actually a good idea. Especially setting height might cause problems
+NEW: width: var dimension
+NEW: height: var dimension
+ | without a set width (or height) it defaults to inner width min and 50% max. we can be creative like 'calc(20rem + 30%)'
+NEW: dimensions: var dimension | set width and height at the same time if you want the imposter to cover the underlying element consistently
+NEW: uncontain: class bool | default to containing the imposter within its positioning container but can override with this
+*/
+.imposter {
+  position: absolute;
+  position: var(--position, absolute);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: auto;
+  max-width: calc(100% - (var(--gap) * 2));
+  max-height: calc(100% - (var(--gap) * 2));
+  width: var(
+    --width,
+    var(--dimensions)
+  ); /* don't set any default to keep behavior */ /* TODO: does it work? */
+  height: var(
+    --height,
+    var(--dimensions)
+  ); /* don't set any default to keep behavior */ /* TODO: does it work? */
+}
+.imposter.fixed {
+  position: fixed;
+  position: var(--position, fixed);
+}
+.imposter.uncontain {
+  max-width: none;
+  max-height: none;
+}
 
 /* -------- UTILITY-HELPERS ------------ */
 /* because ppl seem to like "functional css" */ /* prettier-ignore */

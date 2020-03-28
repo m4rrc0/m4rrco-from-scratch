@@ -4,6 +4,9 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  /* margin: 0; */
+  /* padding: 0; */
 }
 ul[class],
 ol[class] {
@@ -21,7 +24,7 @@ h4,
 h5,
 h6,
 p,
-ul[class],
+ul[class], /* [class] can cause specificity issues. For example, it overrides .cluster > * { margin: ... } */
 ol[class],
 li,
 figure,

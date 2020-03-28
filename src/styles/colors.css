@@ -61,6 +61,12 @@ body *,
   column-rule-color: inherit;
 }
 
+*:focus,
+*[class^='color-palette-']:focus,
+*[class^='color-palette-'] *:focus {
+  outline-color: var(--color-outline, currentcolor);
+}
+
 *::selection,
 *[class^='color-palette-']::selection,
 *[class^='color-palette-'] *::selection {
@@ -179,11 +185,6 @@ body {
   --color-neutral: var(--color-primary-palette);
   --color-primary: var(--color-neutral-palette);
   --color-secondary: var(--color-secondary-palette);
-
-  /* we can manage exceptions on a variation basis if necessary */
-  --color-button_hover-text: var(--color-bg);
-  --color-button_hover-bg: var(--color-text);
-  --color-button-border: var(--color-bg);
 }
 .color-palette-variation-funky {
   --color-neutral: var(--color-neutral-palette);
@@ -194,4 +195,12 @@ body {
   --color-neutral: var(--color-secondary-palette);
   --color-primary: var(--color-neutral-palette);
   --color-secondary: var(--color-primary-palette);
+}
+*[class*='color-palette-'][class*='-contrast'] {
+  /* we can manage exceptions on a variation basis if necessary
+    or with more complex selectors */
+  --color-button_hover-text: var(--color-bg);
+  --color-button_hover-bg: var(--color-text);
+  --color-button-border: var(--color-bg);
+  --color-outline: var(--color-bg);
 }

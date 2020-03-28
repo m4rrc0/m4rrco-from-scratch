@@ -45,6 +45,7 @@
     "servor": "^3.2.0",
     "snowpack": "^1.5.1",
     "svelte": "^3.19.1",
+    "svelte-image": "^0.1.9",
     "svelte-routing": "^1.4.2",
     "svelvet": "^0.3.6",
     "terser": "^4.6.4"

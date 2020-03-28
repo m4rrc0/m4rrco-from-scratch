@@ -188,17 +188,34 @@
   </script>
 </SEO>
 
-<div id="template-global">
-  <nav class="cluster color-palette-variation-contrast">
-    <div>
-      <a href="/">Home</a>
-      <a href="/blog/">Blog</a>
-      <a href="/tests/">Tests</a>
-      <a href="/styleguide/">Styleguide</a>
-      <a href="/subscribe/">Subscribe</a>
+<div id="template-global" class="">
+  <div class="box no-border">
+    <nav class="center cluster overflow gap-h6-down">
+      <ul class="">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/">Blog</a>
+        </li>
+        <li>
+          <a href="/tests/">Tests</a>
+        </li>
+        <li>
+          <a href="/styleguide/">Styleguide</a>
+        </li>
+        <li>
+          <a href="/subscribe/">Subscribe</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="box no-border">
+    <div class="center">
+      <slot />
     </div>
-  </nav>
-  <slot />
+  </div>
+
   <script src="/assets/js/instant.page.js" defer>
 
   </script>
@@ -209,7 +226,7 @@
     margin-bottom: var(--gap-xxl);
   }
   nav {
-    --gap: var(--size-h6);
+    /* --gap: var(--size-h6); */
     /* margin: var(--gap) 0; */
   }
 </style>

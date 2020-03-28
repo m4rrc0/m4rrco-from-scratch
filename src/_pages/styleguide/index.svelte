@@ -15,14 +15,14 @@
   canonicalUrl="https://www.m4rr.co/styleguide/" />
 
 <Template>
-  <div class="stack" style="--gap: 1em">
+  <div class="stack gap-down" style="--gap-down: 1em">
     <h1>Style guide</h1>
     <p>
       This is actually more a
       <em>work in progress</em>
       design system.
     </p>
-    <section class="stack">
+    <section class="stack gap-down" style="--gap-down: 1em;">
       <h2>Typography</h2>
       <h3>Headings</h3>
       <p class="h1">An h1 fox jumps over the fence or whatever</p>
@@ -46,7 +46,7 @@
       <Paragraph />
     </section>
 
-    <section class="stack">
+    <section class="stack gap-down" style="--gap-down: 1em;">
       <h2>Blocks and boxes</h2>
       <h3>A code block</h3>
       <code class="code-block">
@@ -64,8 +64,12 @@
       </blockquote>
     </section>
 
-    <section class="stack">
+    <section class="stack gap-down" style="--gap-down: 1em;">
       <h2>Spacing</h2>
+      <p class="size-h9">size-h9</p>
+      <div
+        class="color-palette-variation-contrast"
+        style="height: var(--size-h9); display: flex; align-items: center;" />
       <p class="size-h8">size-h8</p>
       <div
         class="color-palette-variation-contrast"
@@ -88,16 +92,16 @@
         style="height: var(--size-h4); display: flex; align-items: center;" />
     </section>
 
-    <section class="stack">
+    <section class="stack gap-down" style="--gap-down: 1em;">
       <h2>Grid</h2>
       <div
-        class="grid no-gap"
+        class="grid gap-down-h8"
         style="--width-column: calc(var(--measure) / 3);">
         <div>
           {#each list6 as i}
             <article
-              class={`box no-border stack color-palette-${((i + 2) % 3) + 1}`}
-              style="--padding: var(--size-h5); --gap: 1em;">
+              class={`box no-border stack gap-down color-palette-${((i + 2) % 3) + 1}`}
+              style="--padding: var(--size-h5); --gap-down: 1em;">
               <p class="h3">An h3 fox jumps over the fence or whatever</p>
               <Paragraph />
             </article>
@@ -106,7 +110,7 @@
       </div>
     </section>
 
-    <section class="stack">
+    <section class="stack gap-down" style="--gap-down: 1em;">
       <h2>Colors</h2>
       {#each list6.filter(i => i < 4) as i}
         <div class={`box stack color-palette-${i}`}>
@@ -125,11 +129,25 @@
             base when using specific tools. Ask yourself: "if I want to change
             this piece, how easy will it be?"
           </blockquote>
-          <div class="cluster">
-            <div>
-              <button>Magnificent</button>
-              <button class="color-palette-variation-contrast">Wondeful</button>
-            </div>
+          <div class="cluster overflow">
+            <ul class="no">
+              <li>
+                <button>Magnificent</button>
+              </li>
+              <li>
+                <button class="color-palette-variation-contrast">
+                  Wondeful
+                </button>
+              </li>
+              <li>
+                <button class="color-palette-variation-funky">Marvelous</button>
+              </li>
+              <li>
+                <button class="color-palette-variation-funky-contrast">
+                  Glorious
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       {/each}

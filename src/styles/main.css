@@ -1,8 +1,22 @@
-#app {
+/* --- General styles --- */
+:focus {
+  outline: var(--size-outline, 0.2rem) solid;
+  outline-offset: var(--size-outline, 0.2rem);
+}
+
+/* --- App specific --- */
+*,
+*::before,
+*::after {
+  border-style: solid;
+  border-width: 0;
+}
+
+/* #app {
   margin: auto;
   padding: 0 var(--gap);
   max-width: var(--measure);
-}
+} */
 
 blockquote {
   border-left: var(--size-border-l, 0.4rem) solid;
