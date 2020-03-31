@@ -2,7 +2,7 @@
 set global vars on :root */
 /*
 measure = intrinsic widths sizes
-s... = scale values determined by size-scale-ratio
+s... = unitless scale values determined by size-scale-ratio
 -> can also be computed with a max and min size and steps between
 size-lock... = used for computing css locks for every size we need
 */
@@ -37,68 +37,7 @@ size-lock... = used for computing css locks for every size we need
 }
 
 /* 2. ------------------------------------
-We will use "size contexts" to determine the mins and max to use for the computed locks */
-
-.size-context-main,
-body {
-  /* Default sizing for title */
-  --size-h0-max: var(--s9);
-  --size-h0-min: var(--s6);
-  --size-h1-max: var(--s6);
-  --size-h1-min: var(--s4);
-  --size-h2-max: var(--s4);
-  --size-h2-min: var(--s2);
-  --size-h3-max: var(--s2);
-  --size-h3-min: var(--s1);
-  --size-h4-max: var(--s1);
-  --size-h4-min: var(--s0);
-  --size-p-max: var(--s1);
-  --size-p-min: var(--s0);
-  --size-h5-max: var(--s0);
-  --size-h5-min: var(--s-1);
-  --size-h6-max: var(--s-1);
-  --size-h6-min: var(--s-4);
-  --size-h7-max: var(--s-4);
-  --size-h7-min: var(--s-8);
-  --size-h8-max: var(--s-8);
-  --size-h8-min: var(--s-12);
-  --size-h9-max: var(--s-12);
-  --size-h9-min: var(--s-14);
-}
-
-.size-context-massive {
-  /* Sizing for massive titles in sections */
-  --size-h0-max: var(--s12);
-  --size-h0-min: var(--s5);
-  --size-h1-max: var(--s10);
-  --size-h1-min: var(--s4);
-  --size-h2-max: var(--s8);
-  --size-h2-min: var(--s3);
-  --size-h3-max: var(--s4);
-  --size-h3-min: var(--s2);
-  --size-h4-max: var(--s2);
-  --size-h4-min: var(--s1);
-  --size-p-max: var(--s2);
-  --size-p-min: var(--s1);
-  --size-h5-max: var(--s1);
-  --size-h5-min: var(--s-2);
-  --size-h6-max: var(--s-2);
-  --size-h6-min: var(--s-3);
-  --size-h7-max: var(--s-3);
-  --size-h7-min: var(--s-4);
-  --size-h8-max: var(--s-4);
-  --size-h8-min: var(--s-5);
-  --size-h9-max: var(--s-5);
-  --size-h9-min: var(--s-6);
-}
-
-.size-context-aside {
-  --gap-xl: var(--size-h5);
-  --gap-s: var(--size-s2);
-}
-
-/* 3. ------------------------------------
-Whatever the context we are in, we then need to compute the css locks for every necessary sizes */
+We will work by context. Whatever the context we are in, we need to compute the css locks for every size on the common scale */
 /*
 the lock is the fluid value
 the size-... is the fluid value bound within a min and max IF the browser supports min/max css functions ELSE it will just be the fluid value
@@ -200,18 +139,17 @@ body,
    */
 }
 
-/* 4. ------------------------------------
-  Define context by assigning the appropriate sizes to reusable vars for margins, paddings, ... */
+/* 3. ------------------------------------
+  Default use of context values by assigning the appropriate sizes to reusable vars for margins, paddings, ... */
 /* TODO: what vars do we need throughout the app? Isn't --size-h1 -> --size-h8 enough and more declarative? */
 body,
 *[class*='size-context-'] {
   /* should have multiple widths (max, measure, aside, min, 0, ?) */
-  /* gap is for margins and paddings */
+  /* gap is for margins, paddings, grid-gap, ... */
   --gap-relative-s: 0.618em;
   --gap-relative-m: 1em;
   --gap-relative-l: 1.618em;
-
-  --size-outline: var(--size-h9); /* Used for :focus */
+  --gap-relative: var(--gap-relative-m);
 
   --gap-xxs: var(--size-h7);
   --gap-xs: var(--size-h6);
@@ -238,7 +176,7 @@ body,
   --measure: var(--measure-text);
 
   --size-border-button: var(--size-h8);
-  /* Border widths */
+  /* --- Border widths --- */
   --size-border-0: 0;
   --size-border-s: 1px;
   --size-border-m: var(--size-h8);
@@ -246,7 +184,13 @@ body,
   /* default */
   --size-border: var(--size-border-m);
 
-  /* Gutters = lateral paddings */
+  /* --- outline ---
+  (Used for :focus. Should probably be fixed for the whole site, whatever the context) */
+  /* --size-outline: var(--size-h9); */
+  --size-outline: calc(var(--s-14) * 1rem);
+
+  /* --- Gutters ---
+  = lateral paddings */
   --size-gutters-0: 0;
   --size-gutters-s: var(--size-h8);
   --size-gutters-m: var(--size-p);
@@ -254,7 +198,78 @@ body,
   /* default */
   --size-gutters: var(--size-gutters-m);
 
+  /* --- main site's sections widths --- */
+  /* --width-max: ; */
+  /* --width-main: ; */
+  /* --width-aside: ; */
+  --width-text: var(--measure-text);
   --width-column: calc(var(--measure) / 4);
+  /* --width-min: ; */ /* min block width */
+}
+
+/* 4. ------------------------------------
+Specific contexts use specific values on the scale 
+We will use "size contexts" to determine the mins and max to use for the computed locks */
+
+.size-context-main,
+body {
+  /* Default sizing for title */
+  --size-h0-max: var(--s9);
+  --size-h0-min: var(--s6);
+  --size-h1-max: var(--s6);
+  --size-h1-min: var(--s4);
+  --size-h2-max: var(--s4);
+  --size-h2-min: var(--s2);
+  --size-h3-max: var(--s2);
+  --size-h3-min: var(--s1);
+  --size-h4-max: var(--s1);
+  --size-h4-min: var(--s0);
+  --size-p-max: var(--s1);
+  --size-p-min: var(--s0);
+  --size-h5-max: var(--s0);
+  --size-h5-min: var(--s-1);
+  --size-h6-max: var(--s-1);
+  --size-h6-min: var(--s-4);
+  --size-h7-max: var(--s-4);
+  --size-h7-min: var(--s-8);
+  --size-h8-max: var(--s-8);
+  --size-h8-min: var(--s-12);
+  --size-h9-max: var(--s-12);
+  --size-h9-min: var(--s-14);
+}
+
+.size-context-massive {
+  /* Sizing for massive titles in sections */
+  --size-h0-max: var(--s12);
+  --size-h0-min: var(--s5);
+  --size-h1-max: var(--s10);
+  --size-h1-min: var(--s4);
+  --size-h2-max: var(--s8);
+  --size-h2-min: var(--s3);
+  --size-h3-max: var(--s4);
+  --size-h3-min: var(--s2);
+  --size-h4-max: var(--s2);
+  --size-h4-min: var(--s1);
+  --size-p-max: var(--s2);
+  --size-p-min: var(--s1);
+  --size-h5-max: var(--s1);
+  --size-h5-min: var(--s-2);
+  --size-h6-max: var(--s-2);
+  --size-h6-min: var(--s-3);
+  --size-h7-max: var(--s-3);
+  --size-h7-min: var(--s-4);
+  --size-h8-max: var(--s-4);
+  --size-h8-min: var(--s-5);
+  --size-h9-max: var(--s-5);
+  --size-h9-min: var(--s-6);
+
+  /* We can also override the default use of certain variables */
+  --size-outline: calc(var(--s-14) * 1rem); /* Used for :focus */
+}
+
+.size-context-aside {
+  --gap-xl: var(--size-h5);
+  --gap-s: var(--size-s2);
 }
 
 /* 5. ------------------------------------
