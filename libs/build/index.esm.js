@@ -31,6 +31,22 @@ import {
   // startWatchMode,
   // startDevServer,
 } from './svelvet';
+import { fetchLocalData } from '../source-blink';
+
+/* REFACTOR
+- source code (components, etc) in build/ and dist/
+  - exclude files and folders beginning with _ or with .ignore file
+- source data (from files and from external sources)
+- create build files for all js and svelte files
+  - create a file (DB?) with hashes of all files so that we can check if they need rebuilding whe nwe relaunch server
+- copy assets
+  - minify if PROD
+- for each document
+  - create HTML page (if it is a page)
+    - minify if PROD
+  - create js file (if page hydratable or any component with side effects or front-end function)
+  - 
+*/
 
 const IS_PRODUCTION_MODE = process.env.NODE_ENV === 'production';
 const shouldMinify =
@@ -332,6 +348,8 @@ async function initialBuild() {
     globConfig
   );
 
+  const docs = await fetchLocalData();
+
   // Just copy all other asset types, no point in reading them.
   await Promise.all(
     otherAssetFiles.map(srcPath =>
@@ -360,6 +378,28 @@ async function initialBuild() {
       })
     )
   );
+
+  // const progDestFiles = await Promise.all(
+  //   localData.map(({ path, src }) =>
+  //     concurrencyLimit(async () => {
+  //       const { destPath, logSvelteWarnings } = await compile(
+  //         path,
+  //         {
+  //           outputDir: 'dist',
+  //         },
+  //         {
+  //           hydratable: true,
+  //         },
+  //         src
+  //       );
+
+  //       svelteWarnings.push(logSvelteWarnings);
+  //       return destPath;
+  //     })
+  //   )
+  // );
+
+  console.log(docs.data);
 
   // Compile all source files with svelte for SSR.
   const buildFiles = await Promise.all(

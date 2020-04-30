@@ -10,7 +10,8 @@
     "dev": "npm run clean && node libs/build/index.js --hydratable --preprocess preprocessors.js",
     "serve": "live-server --no-browser --root=dist",
     "svelvet:dev": "svelvet",
-    "svelvet:build": "NODE_ENV=production svelvet"
+    "svelvet:build": "NODE_ENV=production svelvet",
+    "source": "node libs/source-blink/index.js"
   },
   "keywords": [
     "personal site",
@@ -51,7 +52,10 @@
     "terser": "^4.6.4"
   },
   "dependencies": {
+    "flexsearch": "^0.6.32",
     "fontfaceobserver": "^2.1.0",
+    "front-matter": "^3.1.0",
+    "lokijs": "^1.5.8",
     "page": "^1.11.5"
   }
 }
