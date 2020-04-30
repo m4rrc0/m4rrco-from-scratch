@@ -80,3 +80,10 @@ hr {
 pre {
   overflow-x: scroll;
 }
+a,
+button,
+input[type='submit'],
+input[type='button'],
+input[type='rest'] {
+  cursor: pointer;
+}

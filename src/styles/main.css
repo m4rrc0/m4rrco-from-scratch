@@ -12,6 +12,11 @@
   border-width: 0;
 }
 
+input:not([type='submit']):not([type='button']):not([type='reset']),
+textarea {
+  border-width: 1px; /* TODO: remove this when sizing lib is ok */
+}
+
 /* #app {
   margin: auto;
   padding: 0 var(--gap);
