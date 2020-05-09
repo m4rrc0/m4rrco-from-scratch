@@ -18,8 +18,10 @@
   <div class="stack gap-down" style="--gap-down: 1em">
     <h1>Style guide</h1>
     <p>
-      This is actually more a
-      <em>work in progress</em>
+      This is actually more of a
+      <strong>
+        <em>work in progress</em>
+      </strong>
       design system.
     </p>
     <section class="stack gap-down" style="--gap-down: 1em;">

@@ -1,53 +1,5 @@
 <script>
   import SEO from './SEO';
-  // import FontFaceObserver from 'fontfaceobserver';
-
-  // let fontClasses = '';
-
-  // if (typeof window !== 'undefined') {
-  //   // Optimization for Repeat Views
-  //   if (sessionStorage.criticalFoftFontsLoaded) {
-  //     console.log('fonts should already be loaded');
-  //     document.documentElement.className += ' fonts-stage-1 fonts-stage-2';
-  //     // return;
-  //   } else {
-  //     import('fontfaceobserver').then(({ default: FontFaceObserver }) => {
-  //       // FontFaceObserver https://github.com/bramstein/fontfaceobserver
-  //       var fontBodySubset = new FontFaceObserver('LiterataCritical');
-  //       var fontHeadingSubset = new FontFaceObserver('JosefinSansCritical', {
-  //         weight: 700,
-  //         // style: 'italic'
-  //       });
-  //       var fontMonoSubset = new FontFaceObserver('FiraCodeCritical');
-
-  //       Promise.all([
-  //         fontBodySubset.load(),
-  //         fontHeadingSubset.load(),
-  //         fontMonoSubset.load(),
-  //       ]).then(function() {
-  //         // fontClasses = 'fonts-stage-1';
-  //         document.documentElement.className += ' fonts-stage-1';
-
-  //         var fontBody = new FontFaceObserver('Literata');
-  //         var fontHeading = new FontFaceObserver('Josefin Sans');
-  //         var fontMono = new FontFaceObserver('Fira Code');
-
-  //         Promise.all([
-  //           fontBody.load(),
-  //           fontHeading.load(),
-  //           fontMono.load(),
-  //         ]).then(function() {
-  //           console.log('ALL FONTS LOADED');
-  //           // fontClasses = 'fonts-stage-1 fonts-stage-2';
-  //           document.documentElement.className += ' fonts-stage-2';
-
-  //           // Optimization for Repeat Views
-  //           sessionStorage.criticalFoftFontsLoaded = true;
-  //         });
-  //       });
-  //     });
-  //   }
-  // }
 </script>
 
 <SEO setViewport charset="utf-8">
@@ -132,7 +84,6 @@
 
   <script async>
     (function() {
-      console.log('EXECUTE SCRIPT');
       // Optimization for Repeat Views
       if (sessionStorage.fontsLoaded) {
         document.documentElement.className += ' fonts-stage-2';
@@ -197,6 +148,9 @@
         </li>
         <li>
           <a href="/blog/">Blog</a>
+        </li>
+        <li>
+          <a href="/projects/">Projects</a>
         </li>
         <li>
           <a href="/tests/">Tests</a>
