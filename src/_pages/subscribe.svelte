@@ -27,7 +27,7 @@
       <input type="text" name="email" id="tlemail" />
     </p>
     <input type="hidden" value="1" name="embed" />
-    <input type="submit" value="Subscribe" />
+    <input class="button" type="submit" value="Subscribe" />
     <p>
       <a href="https://tinyletter.com" target="_blank">powered by TinyLetter</a>
     </p>

@@ -286,7 +286,7 @@ h6, h6 *, .size-h6, .h6 { font-size: 0.6rem; font-size: var(--size-h6, 0.6rem); 
 .size-h8, .h8 { font-size: 0.25rem; font-size: var(--size-h8, 0.25rem); } /* prettier-ignore */
 .size-h9, .h9 { font-size: 0.1rem; font-size: var(--size-h9, 0.1rem); }
 /* prettier-ignore */
-button, .button { border-width: var(--size-border-button)}
+button, .button { border-width: var(--size-border-button) }
 
 /* --- BORDERS Sub-contexts --- */ /* prettier-ignore */
 .size-border-0 { --size-border: 0; } /* prettier-ignore */

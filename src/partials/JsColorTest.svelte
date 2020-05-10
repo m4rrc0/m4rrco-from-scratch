@@ -1,19 +1,19 @@
 <script>
-  let color = "blue";
+  let colorVariation = 'classic';
 
-  const changeColor = () => {
-    color = color === "blue" ? "red" : "blue";
+  const changeColorVariation = () => {
+    colorVariation = colorVariation === 'classic' ? 'contrast' : 'classic';
   };
 </script>
 
-<div class="js-test-block" style={`color:${color}`}>
+<div class={`js-test-block color-palette-variation-${colorVariation}`}>
   <p>
     This website is built using svelte and inspired by svelvet. Static HTML
     files are hydrated with standard JS esm modules.
     <br />
     The button below allows me to test if JS is loaded properly. ;)
   </p>
-  <button on:click={changeColor}>Change me with JS</button>
+  <button on:click={changeColorVariation}>Change me with JS</button>
 </div>
 
 <style>

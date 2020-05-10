@@ -95,8 +95,11 @@ a[class^='color-palette-']:hover,
 }
 
 button,
+.button,
 button[class*='color-palette-'],
-*[class*='color-palette-'] button {
+.button[class*='color-palette-'],
+*[class*='color-palette-'] button,
+*[class*='color-palette-'] .button {
   color: currentcolor;
   color: var(--color-button-text, #111);
   background-color: transparent;
@@ -105,8 +108,11 @@ button[class*='color-palette-'],
 }
 
 button:hover,
+.button:hover,
 button[class*='color-palette-']:hover,
-*[class*='color-palette-'] button:hover {
+.button[class*='color-palette-']:hover,
+*[class*='color-palette-'] button:hover,
+*[class*='color-palette-'] .button:hover {
   color: #888;
   color: var(--color-button_hover-text, #888);
   background-color: transparent;
@@ -115,8 +121,11 @@ button[class*='color-palette-']:hover,
 }
 
 button:disabled,
+.button:disabled,
 button[class*='color-palette-']:disabled,
-*[class*='color-palette-'] button:disabled {
+.button[class*='color-palette-']:disabled,
+*[class*='color-palette-'] button:disabled,
+*[class*='color-palette-'] .button:disabled {
   color: #999;
   color: var(--color-button_disabled-text, #999);
   background-color: #eee;
@@ -196,7 +205,7 @@ body {
   --color-primary: var(--color-neutral-palette);
   --color-secondary: var(--color-primary-palette);
 }
-*[class*='color-palette-'][class*='-contrast'] {
+button[class*='color-palette-'][class*='-contrast'] {
   /* we can manage exceptions on a variation basis if necessary
     or with more complex selectors */
   --color-button_hover-text: var(--color-bg);

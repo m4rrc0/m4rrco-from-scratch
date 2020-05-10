@@ -82,8 +82,9 @@ pre {
 }
 a,
 button,
+.button,
 input[type='submit'],
 input[type='button'],
-input[type='rest'] {
+input[type='reset'] {
   cursor: pointer;
 }
