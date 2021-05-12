@@ -33,7 +33,7 @@
     "mdsvex": "^0.4.0",
     "node-sass": "^4.13.1",
     "p-limit": "^2.2.2",
-    "postcss": "^7.0.27",
+    "postcss": "^8.2.10",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.19.1",
     "prettier-plugin-svelte": "^0.7.0",
