@@ -44,7 +44,7 @@
     "svelte": "^3.19.1",
     "svelte-routing": "^1.4.2",
     "svelvet": "^0.3.6",
-    "terser": "^4.6.4"
+    "terser": "^4.8.1"
   },
   "dependencies": {
     "fontfaceobserver": "^2.1.0",
